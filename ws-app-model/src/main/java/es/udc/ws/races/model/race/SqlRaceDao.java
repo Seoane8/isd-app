@@ -1,6 +1,6 @@
 package es.udc.ws.races.model.race;
 
-public interface SqlDaoRace {
+public interface SqlRaceDao {
     public Race create(Connection connection, Race race);
 
     //Necesario para añadir una nueva inscripción

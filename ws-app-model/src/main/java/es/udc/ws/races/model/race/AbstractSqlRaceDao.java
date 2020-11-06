@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractSqlRaceDao implements SqlDaoRace {
+public abstract class AbstractSqlRaceDao implements SqlRaceDao {
 
 	
 	protected AbstractSqlRaceDao() {
