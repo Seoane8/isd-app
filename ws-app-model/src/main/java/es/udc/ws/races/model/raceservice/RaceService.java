@@ -1,5 +1,15 @@
 package es.udc.ws.races.model.raceservice;
 
+import es.udc.ws.races.model.race.Race;
+import es.udc.ws.races.model.inscription.Inscription;
+import es.udc.ws.races.model.raceservice.exceptions.*;
+import es.udc.ws.util.exceptions.InputValidationException;
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface RaceService {
     public Race addRace(String description, Float price, LocalDateTime raceDate, int maxParticipants, String city)
             throws InputValidationException;
@@ -14,7 +24,7 @@ public interface RaceService {
             throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException,
             InscriptionDateExpiredException, AlreadyInscriptedException;
 
-    public List<Inscriptions> findInscriptions(String mail)
+    public List<Inscription> findInscriptions(String mail)
             throws InputValidationException;
 
     public void collectDorsal(String creditCard, Long inscriptionId)

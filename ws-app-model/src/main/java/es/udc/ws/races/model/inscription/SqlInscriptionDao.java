@@ -1,7 +1,12 @@
 package es.udc.ws.races.model.inscription;
 
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
+
+import java.sql.Connection;
+import java.util.List;
+
 public interface SqlInscriptionDao {
-    public Inscription create(Connecion connection, Inscription inscription);
+    public Inscription create(Connection connection, Inscription inscription);
 
     //Necesario para recoger dorsal
     public void update(Connection connection, Inscription inscription)

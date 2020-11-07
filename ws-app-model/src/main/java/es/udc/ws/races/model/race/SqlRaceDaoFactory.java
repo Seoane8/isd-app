@@ -1,5 +1,7 @@
 package es.udc.ws.races.model.race;
 
+import es.udc.ws.util.configuration.ConfigurationParametersManager;
+
 public class SqlRaceDaoFactory {
 
     private final static String CLASS_NAME_PARAMETER = "Race.SqlRaceDaoFactory.className";
