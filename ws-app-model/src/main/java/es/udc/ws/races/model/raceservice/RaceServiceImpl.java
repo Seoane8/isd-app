@@ -2,6 +2,7 @@ package es.udc.ws.races.model.raceservice;
 
 import es.udc.ws.races.model.inscription.Inscription;
 import es.udc.ws.races.model.inscription.SqlInscriptionDao;
+import es.udc.ws.races.model.inscription.SqlInscriptionDaoFactory;
 import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
@@ -28,6 +29,7 @@ public class RaceServiceImpl implements RaceService{
     public RaceServiceImpl() {
         this.dataSource = DataSourceLocator.getDataSource(DATA_SOURCE);
         this.raceDao = SqlRaceDaoFactory.getDao();
+        this.inscriptionDao = SqlInscriptionDaoFactory.getDao();
     }
 
     @Override
