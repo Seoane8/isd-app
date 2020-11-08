@@ -4,7 +4,7 @@ import es.udc.ws.util.configuration.ConfigurationParametersManager;
 
 public class SqlInscriptionDaoFactory {
 
-    private final static String CLASS_NAME_PARAMETER = "SqlRaceDaoFactory.className";
+    private final static String CLASS_NAME_PARAMETER = "SqlInscriptionDaoFactory.className";
     private static SqlInscriptionDao dao = null;
 
     private SqlInscriptionDaoFactory(){}
