@@ -14,7 +14,7 @@ public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
 
     @Override
     public void update(Connection connection, Inscription inscription) throws InstanceNotFoundException {
-        String queryString = "UPDATE Inscription"
+        String queryString = "UPDATE Inscription "
                 + "SET raceId = ?, mail = ?, creditCardNumber = ?, dorsal = ?, "
                 + "dorsalCollected = ?, price = ? WHERE inscriptionId = ?";
 

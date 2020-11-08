@@ -10,6 +10,7 @@ import es.udc.ws.races.model.raceservice.exceptions.*;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
+import es.udc.ws.util.validation.PropertyValidator;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -63,6 +64,41 @@ public class RaceServiceImpl implements RaceService{
 
     @Override
     public void collectDorsal(String creditCard, Long inscriptionId) throws InputValidationException, InstanceNotFoundException, AlreadyCollectedException, IncorrectCreditCardException {
+        PropertyValidator.validateCreditCard(creditCard);
 
+        try (Connection connection = dataSource.getConnection()){
+            try{
+                connection.setTransactionIsolation(
+                        Connection.TRANSACTION_SERIALIZABLE);
+                connection.setAutoCommit(false);
+
+                Inscription inscription = inscriptionDao.find(connection, inscriptionId);
+
+                if (inscription.getCredCardNumber() != creditCard){
+                    connection.commit();
+                    throw new IncorrectCreditCardException();
+                }
+                if (inscription.isDorsalCollected()){
+                    connection.commit();
+                    throw new AlreadyCollectedException();
+                }
+
+                inscription.setDorsalCollected(true);
+                inscriptionDao.update(connection, inscription);
+
+                connection.commit();
+            } catch (InstanceNotFoundException e){
+                connection.commit();
+                throw e;
+            } catch (SQLException e){
+                connection.rollback();
+                throw new RuntimeException(e);
+            } catch (RuntimeException | Error e){
+                connection.rollback();
+                throw e;
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 }
