@@ -22,7 +22,7 @@ CREATE TABLE Race(
 ) ENGINE = InnoDB;
 
 -- ----------------------------- Inscriptions ---------------------------------
-CREATE TABLE Inscriptions(
+CREATE TABLE Inscription(
     inscriptionId BIGINT NOT NULL AUTO_INCREMENT,
     raceId BIGINT NOT NULL,
     mail VARCHAR(64) NOT NULL,

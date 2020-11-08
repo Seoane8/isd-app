@@ -7,8 +7,8 @@ public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
     @java.lang.Override
     public Inscription create(Connection connection, Inscription inscription) {
         /* Create "queryString". */
-        String queryString = "INSERT INTO Inscriptions"
-                + "(raceID, mail, credCardNumber, reservationDate, dorsal ,dorsalCollected, price)"
+        String queryString = "INSERT INTO Inscription"
+                + "(raceId, mail, credCardNumber, reservationDate, dorsal ,dorsalCollected, price)"
                 + "VALUES (?,?,?,?,?,?,?)";
 
         try (PreparedStatement preparedStatement =
@@ -19,9 +19,9 @@ public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
             preparedStatement.setLong(i++, inscription.getRaceID());
             preparedStatement.setString(i++, inscription.getMail());
             preparedStatement.setString(i++, inscription.getCredCardNumber());
-            Timestamp reservationdate = inscription.getReservationDate() != null ? new Timestamp(
+            Timestamp reservationDate = inscription.getReservationDate() != null ? new Timestamp(
                     Timestamp.valueOf(inscription.getReservationDate()).getTime()) : null;
-            preparedStatement.setTimestamp(i++, reservationdate);
+            preparedStatement.setTimestamp(i++, reservationDate);
             preparedStatement.setBoolean(i++, inscription.isDorsalCollected());
             preparedStatement.setFloat(i++, inscription.getPrice());
 
