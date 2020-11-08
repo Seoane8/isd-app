@@ -1,5 +1,6 @@
 package es.udc.ws.races.model.raceservice;
 
+import Race.Race;
 import es.udc.ws.races.model.inscription.Inscription;
 import es.udc.ws.races.model.inscription.SqlInscriptionDao;
 import es.udc.ws.races.model.inscription.SqlInscriptionDaoFactory;
@@ -34,8 +35,33 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public Race addRace(String description, Float price, LocalDateTime raceDate, int maxParticipants, String city) throws InputValidationException {
-        return null;
+    public Race addRace(int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation){
+
+        //validateRace(maxParticipants,description,inscriptionPrice,raceDate,raceLocation);
+        try(Connection connection = dataSource.getConnection()){
+
+
+            try{
+                connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                connection.setAutoCommit(false);
+
+                Race createdRace = raceDao.create(connection,new Race(maxParticipants,description,inscriptionPrice,raceDate,raceLocation,0));
+
+                connection.commit();
+
+                return createdRace;
+
+            }catch (SQLException e) {
+                connection.rollback();
+                throw new RuntimeException(e);
+            }catch (RuntimeException| Error e){
+                connection.rollback();
+                throw e;
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -48,8 +74,12 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public List<Race> findRaces(LocalDate date, String city) throws InputValidationException {
-        return null;
+    public List<Race> findRaces(LocalDateTime date, String city ){
+        try (Connection connection = dataSource.getConnection()){
+            return raceDao.findRaces(connection,date,city);
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
