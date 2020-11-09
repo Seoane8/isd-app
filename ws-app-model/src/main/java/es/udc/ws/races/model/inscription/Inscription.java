@@ -14,19 +14,18 @@ public class Inscription {
     private boolean dorsalCollected;
     private float price;
 
-    public Inscription(long raceID, String mail, String credCardNumber, int dorsal, boolean dorsalCollected, float price) {
-        this.inscriptionId = inscriptionId;
+    public Inscription(long raceID, String mail, String credCardNumber, LocalDateTime reservationDate ,int dorsal, boolean dorsalCollected, float price) {
         this.raceID = raceID;
         this.mail = mail;
         this.credCardNumber = credCardNumber;
+        this.reservationDate = reservationDate;
         this.dorsal = dorsal;
         this.dorsalCollected = dorsalCollected;
         this.price = price;
-        this.reservationDate = LocalDateTime.now();
     }
 
-    public Inscription(long inscriptionId, long raceID, String mail, String credCardNumber, int dorsal, boolean dorsalCollected, float price) {
-        this(raceID, mail, credCardNumber, dorsal, dorsalCollected, price);
+    public Inscription(long inscriptionId, long raceID, String mail, String credCardNumber, LocalDateTime reservationDate ,int dorsal, boolean dorsalCollected, float price) {
+        this(raceID, mail, credCardNumber, reservationDate ,dorsal, dorsalCollected, price);
         this.inscriptionId = inscriptionId;
     }
 

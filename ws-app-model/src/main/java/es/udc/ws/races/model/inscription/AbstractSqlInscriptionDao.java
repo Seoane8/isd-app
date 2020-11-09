@@ -70,8 +70,7 @@ public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
             boolean dorsalCollected = resultSet.getBoolean(i++);
             float price = resultSet.getFloat(i++);
 
-            return new Inscription(inscriptionId, raceId, mail, creditCardNumber,
-                    reservationDate, dorsal, dorsalCollected, price);
+            return new Inscription(inscriptionId, raceId, mail, creditCardNumber, reservationDate , dorsal, dorsalCollected, price);
 
         }catch (SQLException e){
             throw new RuntimeException(e);

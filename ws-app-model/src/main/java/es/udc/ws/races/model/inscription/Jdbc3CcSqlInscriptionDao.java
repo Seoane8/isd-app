@@ -1,10 +1,11 @@
 package es.udc.ws.races.model.inscription;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
 
-    @java.lang.Override
+    @Override
     public Inscription create(Connection connection, Inscription inscription) {
         /* Create "queryString". */
         String queryString = "INSERT INTO Inscription"
@@ -40,7 +41,7 @@ public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
             /* Return inscription */
 
             return new Inscription(inscriptionId, inscription.getRaceID(), inscription.getMail(),
-                    inscription.getCredCardNumber(), inscription.getDorsal(),
+                    inscription.getCredCardNumber(), inscription.getReservationDate() ,inscription.getDorsal(),
                     inscription.isDorsalCollected(), inscription.getPrice());
 
         } catch (SQLException e) {
