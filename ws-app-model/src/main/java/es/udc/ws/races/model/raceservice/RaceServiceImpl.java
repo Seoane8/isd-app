@@ -16,9 +16,11 @@ import es.udc.ws.util.validation.PropertyValidator;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Iterator;
 
 import static es.udc.ws.races.model.util.Constants.DATA_SOURCE;
 
@@ -84,7 +86,47 @@ public class RaceServiceImpl implements RaceService{
 
     @Override
     public String addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
-        return null;
+        PropertyValidator.validateCreditCard(creditCard);
+        Race race = findRace(raceId);
+        if(race.getRaceDate().minusDays(1).isBefore(LocalDateTime.now())){
+            throw new InscriptionDateExpiredException();
+        }
+        if(race.getParticipants() >= race.getMaxParticipants()){
+            throw new NoMoreInscriptionsAllowedException();
+        }
+        Iterator<Inscription> iterator = findInscriptions(mail).iterator();
+
+        while(iterator.hasNext()){
+
+            if(iterator.next().getRaceID() == raceId){
+                throw new AlreadyInscriptedException();
+            }
+        }
+        try(Connection connection = dataSource.getConnection()){
+            try{
+                /* Prepare connection */
+                connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                connection.setAutoCommit(false);
+
+                /* Do work */
+
+                Inscription inscription = new Inscription(raceId,mail,creditCard,LocalDateTime.now(),
+                        race.getMaxParticipants()+1,false,race.getInscriptionPrice());
+
+                Inscription createdInscription = inscriptionDao.create(connection,inscription);
+
+                return String.valueOf(createdInscription.getInscriptionId());
+
+            }catch(SQLException e){
+                connection.rollback();
+                throw new RuntimeException(e);
+            }catch(RuntimeException|Error e){
+                connection.rollback();
+                throw e;
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
