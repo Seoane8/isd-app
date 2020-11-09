@@ -1,6 +1,5 @@
 package es.udc.ws.races.model.raceservice;
 
-import Race.Race;
 import es.udc.ws.races.model.inscription.Inscription;
 import es.udc.ws.races.model.inscription.SqlInscriptionDao;
 import es.udc.ws.races.model.inscription.SqlInscriptionDaoFactory;
@@ -37,7 +36,7 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public Race addRace(int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation){
+    public Race addRace(String description, float inscriptionPrice, LocalDateTime raceDate, int maxParticipants, String raceLocation) throws InputValidationException {
 
         //validateRace(maxParticipants,description,inscriptionPrice,raceDate,raceLocation);
         try(Connection connection = dataSource.getConnection()){
@@ -76,9 +75,9 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public List<Race> findRaces(LocalDateTime date, String city ){
+    public List<Race> findRaces(LocalDate date, String city) throws InputValidationException {
         try (Connection connection = dataSource.getConnection()){
-            return raceDao.findRaces(connection,date,city);
+            return raceDao.findRaces(connection,date.atTime(0,0),city);
         } catch (SQLException e){
             throw new RuntimeException(e);
         }

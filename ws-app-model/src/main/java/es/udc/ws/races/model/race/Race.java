@@ -19,12 +19,12 @@ public class Race {
         this.inscriptionPrice = inscriptionPrice;
         this.raceDate = raceDate;
         this.raceLocation = raceLocation;
-        this.participants = participants=0;
+        this.participants = participants;
     }
     public Race(Long raceId , int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation,LocalDateTime creationDate,int participants){
         this(maxParticipants, description, inscriptionPrice, raceDate, raceLocation,participants);
         this.raceId = raceId;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = creationDate;
     }
 
     public Long getRaceId() {

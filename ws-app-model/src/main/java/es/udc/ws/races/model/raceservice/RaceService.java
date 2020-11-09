@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RaceService {
-    public Race addRace(String description, Float price, LocalDateTime raceDate, int maxParticipants, String city)
+    public Race addRace(String description, float price, LocalDateTime raceDate, int maxParticipants, String city)
             throws InputValidationException;
 
     public Race findRace(Long raceID)

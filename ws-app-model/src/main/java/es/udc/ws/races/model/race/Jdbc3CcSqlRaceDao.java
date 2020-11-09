@@ -18,7 +18,7 @@ public class Jdbc3CcSqlRaceDao extends AbstractSqlRaceDao {
 	                        queryString, Statement.RETURN_GENERATED_KEYS)) {
 
 	            /* Fill "preparedStatement". */
-	        	race.setCreationDate(LocalDateTime.now());
+	        	race.setCreationDate(LocalDateTime.now().withNano(0));
 	            int i = 1;
 	            preparedStatement.setInt(i++,race.getMaxParticipants());
 	            preparedStatement.setString(i++, race.getDescription());

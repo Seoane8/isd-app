@@ -2,8 +2,8 @@
 -- Model
 -------------------------------------------------------------------------------
 
+DROP TABLE Inscription;
 DROP TABLE Race;
-DROP TABLE Inscriptions;
 
 -- --------------------------------- Race -------------------------------------
 CREATE TABLE Race(
@@ -18,7 +18,7 @@ CREATE TABLE Race(
     CONSTRAINT RacePK PRIMARY KEY(raceId),
     CONSTRAINT validMaxParticipants CHECK (maxParticipants > 0),
     CONSTRAINT validParticipants CHECK (participants >= 0),
-    CONSTRAINT validPrice CHECK (price >= 0)
+    CONSTRAINT validPriceRace CHECK (price >= 0)
 ) ENGINE = InnoDB;
 
 -- ----------------------------- Inscriptions ---------------------------------
@@ -34,6 +34,6 @@ CREATE TABLE Inscription(
     CONSTRAINT InscriptionPK PRIMARY KEY(inscriptionId),
     CONSTRAINT InscriptionRaceFK FOREIGN KEY(raceId)
         REFERENCES Race(raceId) ON DELETE CASCADE,
-    CONSTRAINT validPrice CHECK (price >= 0),
+    CONSTRAINT validPriceInsc CHECK (price >= 0),
     CONSTRAINT validDorsal CHECK (dorsal >= 0)
 ) ENGINE = InnoDB;

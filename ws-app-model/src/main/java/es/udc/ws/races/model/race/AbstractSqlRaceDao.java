@@ -19,8 +19,8 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
     		throws InstanceNotFoundException {
 
         /* Create "queryString". */
-        String queryString = "SELECT maxParticipants, description "
-                + "  inscriptionPrice, raceDate, raceLocation, creationDate, participants FROM Race WHERE raceId = ?";
+        String queryString = "SELECT maxParticipants, description, "
+                + "  price, raceDate, city, creationDate, participants FROM Race WHERE raceId = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
 
@@ -61,8 +61,8 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
     public List<Race> findRaces(Connection connection, LocalDateTime initDate, String city) {
 
         /* Create "queryString". */
-        String queryString = "SELECT raceId, maxParticipants, description "
-                + "  inscriptionPrice, raceDate, raceLocation, creationDate, participants FROM Race";
+        String queryString = "SELECT raceId, maxParticipants, description, "
+                + "  price, raceDate, city, creationDate, participants FROM Race";
         if (city != null || initDate != null)
             queryString += " WHERE";
         if (city != null) {
@@ -125,8 +125,8 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
 
         /* Create "queryString". */
         String queryString = "UPDATE Race"
-                + " SET maxParticipants = ?, description = ?, inscriptionPrice = ?, "
-                + "raceDate = ?, raceLocation = ?, participants = ? WHERE raceId = ?";
+                + " SET maxParticipants = ?, description = ?, price = ?, "
+                + "raceDate = ?, city = ?, participants = ? WHERE raceId = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
 
