@@ -9,7 +9,6 @@ import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
 import es.udc.ws.util.sql.SimpleDataSource;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import static es.udc.ws.races.model.util.Constants.DATA_SOURCE;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RaceServiceTest {
     private final String VALID_DESCRIPTION = "Description of a new race";
@@ -28,6 +27,7 @@ public class RaceServiceTest {
     private final LocalDateTime VALID_RACE_DATE = LocalDateTime.parse("2020-08-30T11:30:00");
     private final int VALID_PARTICIPANTS = 130;
     private final String VALID_CITY = "A Coruña";
+    private final long INVALID_RACEID = -1;
 
     private static RaceService raceService = null;
     private static SqlRaceDao raceDao = null;
@@ -99,6 +99,16 @@ public class RaceServiceTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testFindNonExistentRace(){
+
+        assertThrows(InstanceNotFoundException.class, () -> {
+            Race race = raceService.findRace(INVALID_RACEID);
+            removeRace(race);
+        });
+
     }
 
 }
