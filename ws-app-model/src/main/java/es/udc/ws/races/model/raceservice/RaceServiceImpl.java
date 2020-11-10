@@ -85,22 +85,7 @@ public class RaceServiceImpl implements RaceService{
 
     @Override
     public String addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
-        PropertyValidator.validateCreditCard(creditCard);
-        Race race = findRace(raceId);
-        if(race.getRaceDate().minusDays(1).isBefore(LocalDateTime.now())){
-            throw new InscriptionDateExpiredException();
-        }
-        if(race.getParticipants() >= race.getMaxParticipants()){
-            throw new NoMoreInscriptionsAllowedException();
-        }
-        Iterator<Inscription> iterator = findInscriptions(mail).iterator();
 
-        while(iterator.hasNext()){
-
-            if(iterator.next().getRaceID() == raceId){
-                throw new AlreadyInscriptedException();
-            }
-        }
         try(Connection connection = dataSource.getConnection()){
             try{
                 /* Prepare connection */
@@ -109,11 +94,34 @@ public class RaceServiceImpl implements RaceService{
 
                 /* Do work */
 
+                PropertyValidator.validateCreditCard(creditCard);
+                Race race = findRace(raceId);
+                if(race.getRaceDate().minusDays(1).isBefore(LocalDateTime.now())){
+                    throw new InscriptionDateExpiredException();
+                }
+                if(race.getParticipants() >= race.getMaxParticipants()){
+                    throw new NoMoreInscriptionsAllowedException();
+                }
+                Iterator<Inscription> iterator = findInscriptions(mail).iterator();
+
+                while(iterator.hasNext()){
+
+                    if(iterator.next().getRaceID() == raceId){
+                        throw new AlreadyInscriptedException();
+                    }
+                }
+
                 Inscription inscription = new Inscription(raceId,mail,creditCard,LocalDateTime.now(),
                         race.getMaxParticipants()+1,false,race.getInscriptionPrice());
 
                 Inscription createdInscription = inscriptionDao.create(connection,inscription);
+                race.setParticipants(race.getParticipants()+1);
+                raceDao.update(connection,race);
 
+
+                /* Commit */
+
+                connection.commit();
                 return String.valueOf(createdInscription.getInscriptionId());
 
             }catch(SQLException e){
