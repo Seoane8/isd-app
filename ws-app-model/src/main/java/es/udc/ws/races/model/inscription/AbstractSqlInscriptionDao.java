@@ -43,9 +43,9 @@ public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
 
     @Override
     public Inscription find(Connection connection, Long inscriptionId) throws InstanceNotFoundException {
-        String queryString = "SELECT raceId, mail, creditCardNumbre, "
+        String queryString = "SELECT raceId, mail, creditCardNumber, "
                 + "reservationDate, dorsal, dorsalCollected, "
-                + "price FROM Inscription WHERE incriptionId = ?";
+                + "price FROM Inscription WHERE inscriptionId = ?";
 
         try (PreparedStatement preparedStatement =
              connection.prepareStatement(queryString)){
