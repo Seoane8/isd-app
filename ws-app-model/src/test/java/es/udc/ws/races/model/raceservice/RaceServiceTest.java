@@ -1,5 +1,6 @@
 package es.udc.ws.races.model.raceservice;
 
+import es.udc.ws.races.model.inscription.Inscription;
 import es.udc.ws.races.model.inscription.SqlInscriptionDao;
 import es.udc.ws.races.model.inscription.SqlInscriptionDaoFactory;
 import es.udc.ws.races.model.race.Race;
@@ -28,6 +29,10 @@ public class RaceServiceTest {
     private final int VALID_PARTICIPANTS = 130;
     private final String VALID_CITY = "A Coruña";
     private final long INVALID_RACEID = -1;
+
+    private final String VALID_CREDIT_CARD = "1234123412341234";
+    private final String INVALID_CREDIT_CARD = "432";
+    private final long INVALID_INSCRIPTION_ID = -1;
 
     private static RaceService raceService = null;
     private static SqlRaceDao raceDao = null;
@@ -111,4 +116,10 @@ public class RaceServiceTest {
 
     }
 
+    @Test
+    public void testCollectDorsalWithInvalidCreditCard(){
+
+        assertThrows(InputValidationException.class, () ->
+                raceService.collectDorsal(INVALID_CREDIT_CARD, INVALID_INSCRIPTION_ID));
+    }
 }
