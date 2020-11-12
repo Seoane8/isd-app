@@ -122,4 +122,11 @@ public class RaceServiceTest {
         assertThrows(InputValidationException.class, () ->
                 raceService.collectDorsal(INVALID_CREDIT_CARD, INVALID_INSCRIPTION_ID));
     }
+
+    @Test
+    public void testCollectDorsalOfNonExistentInscription(){
+
+        assertThrows(InstanceNotFoundException.class, () ->
+                raceService.collectDorsal(VALID_CREDIT_CARD, INVALID_INSCRIPTION_ID));
+    }
 }
