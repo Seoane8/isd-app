@@ -153,7 +153,7 @@ public class RaceServiceImpl implements RaceService{
 
                 Inscription inscription = inscriptionDao.find(connection, inscriptionId);
 
-                if (inscription.getCredCardNumber() != creditCard){
+                if (!inscription.getCredCardNumber().equals(creditCard)){
                     connection.commit();
                     throw new IncorrectCreditCardException();
                 }

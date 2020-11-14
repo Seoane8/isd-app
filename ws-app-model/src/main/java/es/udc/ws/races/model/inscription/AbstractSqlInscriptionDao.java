@@ -1,5 +1,6 @@
 package es.udc.ws.races.model.inscription;
 
+import es.udc.ws.races.model.race.Race;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.sql.*;
@@ -89,6 +90,22 @@ public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
 
     @Override
     public void remove(Connection connection, Inscription inscription) throws InstanceNotFoundException {
+
+        String queryString = "DELETE FROM Inscription WHERE inscriptionId = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
+            int i = 1;
+            preparedStatement.setLong(i++, inscription.getInscriptionId());
+
+            int removedRows = preparedStatement.executeUpdate();
+
+            if (removedRows == 0){
+                throw new InstanceNotFoundException(inscription.getInscriptionId(),
+                        Inscription.class.getName());
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
 
     }
 }

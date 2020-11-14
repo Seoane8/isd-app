@@ -9,7 +9,7 @@ public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
     public Inscription create(Connection connection, Inscription inscription) {
         /* Create "queryString". */
         String queryString = "INSERT INTO Inscription"
-                + "(raceId, mail, credCardNumber, reservationDate, dorsal ,dorsalCollected, price)"
+                + "(raceId, mail, creditCardNumber, reservationDate, dorsal ,dorsalCollected, price)"
                 + "VALUES (?,?,?,?,?,?,?)";
 
         try (PreparedStatement preparedStatement =
@@ -23,6 +23,7 @@ public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
             Timestamp reservationDate = inscription.getReservationDate() != null ? new Timestamp(
                     Timestamp.valueOf(inscription.getReservationDate()).getTime()) : null;
             preparedStatement.setTimestamp(i++, reservationDate);
+            preparedStatement.setInt(i++, inscription.getDorsal());
             preparedStatement.setBoolean(i++, inscription.isDorsalCollected());
             preparedStatement.setFloat(i++, inscription.getPrice());
 

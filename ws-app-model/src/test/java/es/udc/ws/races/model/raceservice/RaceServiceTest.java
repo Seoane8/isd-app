@@ -6,6 +6,7 @@ import es.udc.ws.races.model.inscription.SqlInscriptionDaoFactory;
 import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
+import es.udc.ws.races.model.raceservice.exceptions.*;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,11 +27,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RaceServiceTest {
     private final String VALID_DESCRIPTION = "Description of a new race";
     private final float VALID_PRICE = 9.95f;
-    private final LocalDateTime VALID_RACE_DATE = LocalDateTime.parse("2020-08-30T11:30:00");
+    private final LocalDateTime VALID_RACE_DATE = LocalDateTime.parse("2021-08-22T11:30:00");
     private final int VALID_PARTICIPANTS = 130;
     private final String VALID_CITY = "A Coruña";
     private final long INVALID_RACEID = -1;
 
+    private final String VALID_MAIL = "example@udc.es";
     private final String VALID_CREDIT_CARD = "1234123412341234";
     private final String INVALID_CREDIT_CARD = "432";
     private final long INVALID_INSCRIPTION_ID = -1;
@@ -48,7 +51,7 @@ public class RaceServiceTest {
         inscriptionDao = SqlInscriptionDaoFactory.getDao();
     }
 
-    private void removeRace(Race race) throws SQLException{
+    private void removeRace(Race race){
         DataSource dataSource = DataSourceLocator.getDataSource(DATA_SOURCE);
 
         try(Connection connection = dataSource.getConnection()){
@@ -69,6 +72,44 @@ public class RaceServiceTest {
                 connection.rollback();
                 throw e;
             }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void removeInscription(Inscription inscription){
+        DataSource dataSource = DataSourceLocator.getDataSource(DATA_SOURCE);
+
+        try(Connection connection = dataSource.getConnection()){
+            try{
+                connection.setTransactionIsolation(connection.TRANSACTION_SERIALIZABLE);
+                connection.setAutoCommit(false);
+
+                inscriptionDao.remove(connection, inscription);
+
+                connection.commit();
+            }catch (InstanceNotFoundException e){
+                connection.commit();
+                throw new RuntimeException(e);
+            }catch (SQLException e){
+                connection.rollback();
+                throw new RuntimeException(e);
+            }catch (RuntimeException | Error e){
+                connection.rollback();
+                throw e;
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Inscription findInscription(Long inscriptionId){
+        DataSource dataSource = DataSourceLocator.getDataSource(DATA_SOURCE);
+
+        try(Connection connection = dataSource.getConnection()){
+            return inscriptionDao.find(connection, inscriptionId);
+        }catch (InstanceNotFoundException | SQLException e){
+            throw new RuntimeException(e);
         }
     }
 
@@ -97,11 +138,7 @@ public class RaceServiceTest {
 
         } finally {
             if (race != null){
-                try{
-                    removeRace(race);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                removeRace(race);
             }
         }
     }
@@ -114,6 +151,40 @@ public class RaceServiceTest {
             removeRace(race);
         });
 
+    }
+
+    @Test
+    public void testCollectDorsalAndAlreadyCollectedDorsal() throws InputValidationException,
+            InstanceNotFoundException, AlreadyCollectedException,
+            IncorrectCreditCardException, NoMoreInscriptionsAllowedException,
+            InscriptionDateExpiredException, AlreadyInscriptedException {
+
+        Race race = null;
+        Inscription inscription = null;
+
+        try{
+            race = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            Long inscriptionId = raceService.addInscription(race.getRaceId(),
+                    VALID_MAIL, VALID_CREDIT_CARD);
+
+            raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId);
+
+            inscription = findInscription(inscriptionId);
+
+            assertTrue(inscription.isDorsalCollected());
+
+            assertThrows(AlreadyCollectedException.class, () ->
+                    raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId));
+
+        } finally{
+            if (inscription != null){
+                removeInscription(inscription);
+            }
+            if (race != null){
+                removeRace(race);
+            }
+        }
     }
 
     @Test
