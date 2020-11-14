@@ -35,6 +35,7 @@ public class RaceServiceTest {
     private final String VALID_MAIL = "example@udc.es";
     private final String VALID_CREDIT_CARD = "1234123412341234";
     private final String INVALID_CREDIT_CARD = "432";
+    private final String INCORRECT_CREDIT_CARD = "1111222233334444";
     private final long INVALID_INSCRIPTION_ID = -1;
 
     private static RaceService raceService = null;
@@ -200,4 +201,35 @@ public class RaceServiceTest {
         assertThrows(InstanceNotFoundException.class, () ->
                 raceService.collectDorsal(VALID_CREDIT_CARD, INVALID_INSCRIPTION_ID));
     }
+
+    @Test
+    public void testCollectDorsalWithIncorrectCreditCard() throws InputValidationException,
+            InstanceNotFoundException, NoMoreInscriptionsAllowedException,
+            InscriptionDateExpiredException, AlreadyInscriptedException {
+
+        Race race = null;
+        Inscription inscription = null;
+
+        try{
+            race = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            Long inscriptionId = raceService.addInscription(race.getRaceId(),
+                    VALID_MAIL, VALID_CREDIT_CARD);
+
+            assertThrows(IncorrectCreditCardException.class, () ->
+                    raceService.collectDorsal(INCORRECT_CREDIT_CARD, inscriptionId));
+
+            //Necessary to remove inscription
+            inscription = findInscription(inscriptionId);
+
+        } finally{
+            if (inscription != null){
+                removeInscription(inscription);
+            }
+            if (race != null){
+                removeRace(race);
+            }
+        }
+    }
+
 }
