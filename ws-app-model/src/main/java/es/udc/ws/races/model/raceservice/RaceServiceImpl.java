@@ -84,7 +84,7 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public String addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
+    public Long addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
 
         try(Connection connection = dataSource.getConnection()){
             try{
@@ -122,7 +122,7 @@ public class RaceServiceImpl implements RaceService{
                 /* Commit */
 
                 connection.commit();
-                return String.valueOf(createdInscription.getInscriptionId());
+                return createdInscription.getInscriptionId();
 
             }catch(SQLException e){
                 connection.rollback();

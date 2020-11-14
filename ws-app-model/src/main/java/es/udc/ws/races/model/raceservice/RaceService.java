@@ -20,7 +20,7 @@ public interface RaceService {
     public List<Race> findRaces(LocalDate date, String city)
             throws InputValidationException;
 
-    public String addInscription(Long raceId, String mail, String creditCard)
+    public Long addInscription(Long raceId, String mail, String creditCard)
             throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException,
             InscriptionDateExpiredException, AlreadyInscriptedException;
 
