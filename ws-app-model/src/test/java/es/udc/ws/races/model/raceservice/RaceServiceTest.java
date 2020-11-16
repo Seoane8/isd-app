@@ -8,9 +8,9 @@ import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
 import es.udc.ws.races.model.raceservice.exceptions.*;
 import es.udc.ws.races.model.raceservice.RaceService;
-import es.udc.ws.util.exceptions.InputValidationException;
-import es.udc.ws.util.exceptions.InstanceNotFoundException;
-import es.udc.ws.util.sql.DataSourceLocator;
+import es.udc.ws.races.model.util.PropertyValidator;
+import es.udc.ws.races.model.util.exceptions.InstanceNotFoundException;
+import es.udc.ws.races.model.util.
 import es.udc.ws.util.sql.SimpleDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -216,17 +216,6 @@ public class RaceServiceTest {
             }
             assertTrue(exceptionCatched);
 
-            // Check bike price <= MAX_PRICE
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
-            race.setInscriptionPrice((MAX_PRICE + 1.0F));
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
-
             // Check raceLocation is correct
             exceptionCatched = false;
             race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
@@ -317,7 +306,8 @@ public class RaceServiceTest {
         }
     }
 
-    public void testFindRaces() throws InstanceNotFoundException {
+    @Test
+    public void testFindRaces(){
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;

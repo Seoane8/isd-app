@@ -7,6 +7,7 @@ import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
 import es.udc.ws.races.model.raceservice.exceptions.*;
+import es.udc.ws.races.model.util.PropertyValidator;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
@@ -75,9 +76,9 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public List<Race> findRaces(LocalDate date, String city) throws InputValidationException {
+    public List<Race> findRaces(LocalDate date, String city)  {
         try (Connection connection = dataSource.getConnection()){
-            return raceDao.findRaces(connection,date.atTime(0,0),city);
+            return raceDao.findRaces(connection,date.atStartOfDay(),city);
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -179,4 +180,21 @@ public class RaceServiceImpl implements RaceService{
             throw new RuntimeException(e);
         }
     }
+
+    private void validateRace (int maxParticipants, String description, Float inscriptionPrice, LocalDate raceDate, String city) throws InputValidationException {
+        PropertyValidator.validateDouble("maxParticipants",(double) maxParticipants,1,1000);
+        PropertyValidator.validateMandatoryString("description", description);
+        PropertyValidator.validateDouble("inscriptionPrice", inscriptionPrice, 1, 1000000);
+        validateRaceDate(raceDate);
+        PropertyValidator.validateMandatoryString("city", city);
+    }
+
+    public void validateRaceDate(LocalDate raceDate){
+
+
+
+
+
+    }
+
 }
