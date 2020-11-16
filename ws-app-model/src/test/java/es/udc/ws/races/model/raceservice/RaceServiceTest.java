@@ -7,6 +7,7 @@ import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
 import es.udc.ws.races.model.raceservice.exceptions.*;
+import es.udc.ws.races.model.raceservice.RaceService;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
@@ -19,7 +20,9 @@ import javax.xml.crypto.Data;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static es.udc.ws.races.model.util.Constants.DATA_SOURCE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,6 +54,16 @@ public class RaceServiceTest {
         raceDao = SqlRaceDaoFactory.getDao();
         inscriptionDao = SqlInscriptionDaoFactory.getDao();
     }
+    private Race createRace(Race race) throws InputValidationException{
+
+        Race addedRace = null;
+
+        addedRace = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+        return addedRace;
+
+    }
+
 
     private void removeRace(Race race){
         DataSource dataSource = DataSourceLocator.getDataSource(DATA_SOURCE);
@@ -113,7 +126,6 @@ public class RaceServiceTest {
             throw new RuntimeException(e);
         }
     }
-
     @Test
     public void testAddRaceAndFindRace() throws InstanceNotFoundException, InputValidationException {
         Race race = null;
@@ -143,6 +155,123 @@ public class RaceServiceTest {
             }
         }
     }
+
+    @Test
+    public void testAddInvalidRace() throws InputValidationException, SQLException{
+        Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        Race addedRace = null;
+        boolean exceptionCatched = false;
+
+        try {
+            // Check maxparticipants not valid
+            race.setMaxParticipants(-3);
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check maxparticipants isn't 0
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setMaxParticipants(0);
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check description isn't null
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setDescription(null);
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check description isn't empty
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setDescription("");
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check race price >= 0
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setInscriptionPrice(-5);
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check bike price <= MAX_PRICE
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setInscriptionPrice((MAX_PRICE + 1.0F));
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            // Check raceLocation is correct
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setRaceLocation("A Coruña%");
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            //Check raceLocation isn't null
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setRaceLocation(null);
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+            //Check raceLocation isn't empty
+            exceptionCatched = false;
+            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+            race.setRaceLocation("");
+            try {
+                addedRace = createRace(race);
+            } catch (InputValidationException e) {
+                exceptionCatched = true;
+            }
+            assertTrue(exceptionCatched);
+
+
+        } finally {
+            if (!exceptionCatched) {
+                // Clear Database
+                if(addedRace != null) {
+                    removeRace(addedRace);
+                }
+            }
+        }
+
+    }
+
 
     @Test
     public void testFindNonExistentRace(){
@@ -187,6 +316,54 @@ public class RaceServiceTest {
             }
         }
     }
+
+    public void testFindRaces() throws InstanceNotFoundException {
+        Race race1 = null;
+        Race race2 = null;
+        Race race3 = null;
+        try{
+            LocalDateTime beforeAddDate = LocalDateTime.now().withNano(0);
+
+            race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, "A Coruña");
+            race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    LocalDateTime.parse("2020-08-31T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
+
+
+            LocalDateTime afterAddDate = LocalDateTime.now().withNano(0);
+            //Deberia añadir a la lista las carreras race2 y race 3
+            List<Race> foundRace = raceService.findRaces(LocalDate.parse("2020-09-01T11:30:00"),"A coruña");
+
+            assertEquals(race2, foundRace.get(0));
+            assertEquals(race3,foundRace.get(1));
+
+
+        } finally {
+                try{
+                    removeRace(race1);
+                    removeRace(race2);
+                    removeRace(race3);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+    @Test
+    public void testFindNonExistentRaces(){
+
+        assertThrows(InstanceNotFoundException.class, () -> {
+            List<Race> races = raceService.findRaces(VALID_RACE_DATE.toLocalDate(),VALID_CITY);
+            while (!races.isEmpty()){
+                removeRace(races.get(0));
+            }
+        });
+
+    }
+
+
 
     @Test
     public void testCollectDorsalWithInvalidCreditCard(){
