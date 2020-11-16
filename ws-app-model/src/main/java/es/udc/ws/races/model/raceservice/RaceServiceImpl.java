@@ -114,7 +114,6 @@ public class RaceServiceImpl implements RaceService{
                 race.setParticipants(race.getParticipants()+1);
                 raceDao.update(connection,race);
 
-
                 /* Commit */
 
                 connection.commit();
@@ -134,7 +133,11 @@ public class RaceServiceImpl implements RaceService{
 
     @Override
     public List<Inscription> findInscriptions(String mail) throws InputValidationException {
-        return null;
+        try(Connection connection = dataSource.getConnection()){
+            return inscriptionDao.findByMail(connection,mail);
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
