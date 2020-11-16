@@ -86,6 +86,7 @@ public class RaceServiceImpl implements RaceService{
     @Override
     public Long addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
 
+        PropertyValidator.validateCreditCard(creditCard);
         try(Connection connection = dataSource.getConnection()){
             try{
                 /* Prepare connection */
@@ -94,7 +95,6 @@ public class RaceServiceImpl implements RaceService{
 
                 /* Do work */
 
-                PropertyValidator.validateCreditCard(creditCard);
                 Race race = findRace(raceId);
                 if(race.getRaceDate().minusDays(1).isBefore(LocalDateTime.now())){
                     throw new InscriptionDateExpiredException();
@@ -102,17 +102,13 @@ public class RaceServiceImpl implements RaceService{
                 if(race.getParticipants() >= race.getMaxParticipants()){
                     throw new NoMoreInscriptionsAllowedException();
                 }
-                Iterator<Inscription> iterator = findInscriptions(mail).iterator();
 
-                while(iterator.hasNext()){
-
-                    if(iterator.next().getRaceID() == raceId){
+                if(inscriptionDao.isInscripted(connection,raceId,mail)){
                         throw new AlreadyInscriptedException();
-                    }
                 }
 
                 Inscription inscription = new Inscription(raceId,mail,creditCard,LocalDateTime.now(),
-                        race.getMaxParticipants()+1,false,race.getInscriptionPrice());
+                        race.getParticipants()+1,false,race.getInscriptionPrice());
 
                 Inscription createdInscription = inscriptionDao.create(connection,inscription);
                 race.setParticipants(race.getParticipants()+1);
