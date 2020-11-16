@@ -232,4 +232,35 @@ public class RaceServiceTest {
         }
     }
 
+    @Test
+    public void testAddInscription() throws InputValidationException,
+            InstanceNotFoundException,
+            NoMoreInscriptionsAllowedException,
+            InscriptionDateExpiredException, AlreadyInscriptedException {
+        Race race1 = null;
+        Race race2 = null;
+        Race race3 = null;
+
+        Long inscriptionID = null;
+
+        try{
+            race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, LocalDateTime.now(), VALID_PARTICIPANTS, VALID_CITY);
+            race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 0, VALID_CITY);
+            Race finalRace1 = race1;
+            Race finalRace2 = race2;
+            Race finalRace3 = race3;
+            assertThrows(InputValidationException.class, () -> raceService.addInscription(finalRace1.getRaceId(),VALID_MAIL,INVALID_CREDIT_CARD));
+            assertThrows(InscriptionDateExpiredException.class, () -> raceService.addInscription(finalRace2.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+            assertThrows(NoMoreInscriptionsAllowedException.class, () ->  raceService.addInscription(finalRace3.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+            inscriptionID = raceService.addInscription(race1.getRaceId(),VALID_MAIL,VALID_CREDIT_CARD);
+            assertThrows(AlreadyInscriptedException.class, () -> raceService.addInscription(finalRace1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+        }finally{
+            if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
+            if(race1 != null){ removeRace(race1);}
+            if(race2 != null){ removeRace(race2);}
+            if(race3 != null){ removeRace(race3);}
+
+        }
+    }
 }
