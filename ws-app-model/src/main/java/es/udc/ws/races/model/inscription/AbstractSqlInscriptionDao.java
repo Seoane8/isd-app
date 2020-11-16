@@ -4,7 +4,10 @@ import es.udc.ws.races.model.race.Race;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.sql.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
@@ -79,13 +82,67 @@ public abstract class AbstractSqlInscriptionDao implements SqlInscriptionDao{
     }
 
     @Override
-    public boolean isInscripted(Connection connection, Long raceId, String mail) {
-        return false;
+    public boolean isInscripted(Connection connection, Long raceId, String mail){
+
+        /* Create "queryString". */
+        String queryString = "SELECT * FROM Inscription WHERE raceID = ? AND mail = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
+
+
+            /* Fill "preparedStatement" */
+            int i = 1;
+            preparedStatement.setLong(i++,raceId);
+            preparedStatement.setString(i++,mail);
+
+            /* Execute query */
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            /* Read result and return*/
+            return resultSet.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<Inscription> findByMail(Connection connection, String mail) {
-        return null;
+    public List<Inscription> findByMail(Connection connection, String mail){
+
+        /* Create "queryString"*/
+
+        String queryString = "SELECT * FROM Inscription WHERE mail = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
+
+            /* Fill "preparedStatement". */
+            preparedStatement.setString(1,mail);
+
+            /* Execute query */
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            /* Read inscriptions */
+            List<Inscription> inscriptions = new ArrayList<Inscription>();
+            while(resultSet.next()){
+
+                int i = 1;
+                Long inscriptionId = resultSet.getLong(i++);
+                Long raceId = resultSet.getLong(i++);
+                String mailR = resultSet.getString(i++);
+                String creditcard = resultSet.getString(i++);
+                LocalDateTime reservationDate = Instant.ofEpochMilli(resultSet.getDate(i++).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                int dorsal = resultSet.getInt(i++);
+                boolean dorsalCollected = resultSet.getBoolean(i++);
+                float price = resultSet.getFloat(i++);
+
+                inscriptions.add(new Inscription(inscriptionId,raceId, mailR,creditcard, reservationDate, dorsal, dorsalCollected, price));
+            }
+
+            /* Return inscriptions */
+            return inscriptions;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
