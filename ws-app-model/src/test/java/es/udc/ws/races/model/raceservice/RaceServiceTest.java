@@ -304,11 +304,11 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testFindRaces(){
+    public void testFindRaces() {
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;
-        try{
+        try {
             LocalDateTime beforeAddDate = LocalDateTime.now().withNano(0);
 
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
@@ -321,20 +321,18 @@ public class RaceServiceTest {
 
             LocalDateTime afterAddDate = LocalDateTime.now().withNano(0);
             //Deberia añadir a la lista las carreras race2 y race 3
-            List<Race> foundRace = raceService.findRaces(LocalDate.parse("2020-09-01T11:30:00"),"A coruña");
-
+            List<Race> foundRace = raceService.findRaces(LocalDate.parse("2020-09-01T11:30:00"), "A Coruña");
+            // Probamos a hacer una busqueda incorrecta, deberia devolver una lista vacia
+            List<Race> nofoundRace = raceService.findRaces(LocalDate.parse("2019-09-01T11:30:30"), "A Coruña");
             assertEquals(race2, foundRace.get(0));
-            assertEquals(race3,foundRace.get(1));
-
+            assertEquals(race3, foundRace.get(1));
+            assertTrue(nofoundRace.isEmpty());
 
         } finally {
-                try{
-                    removeRace(race1);
-                    removeRace(race2);
-                    removeRace(race3);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+
+                removeRace(race1);
+                removeRace(race2);
+                removeRace(race3);
             }
         }
 
