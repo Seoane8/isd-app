@@ -406,21 +406,22 @@ public class RaceServiceTest {
         Race race3 = null;
 
         Long inscriptionID = null;
+        Long inscriptionID2 = null;
 
         try{
-            race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 2, VALID_CITY);
             race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, LocalDateTime.now(), VALID_PARTICIPANTS, VALID_CITY);
-            race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 0, VALID_CITY);
             Race finalRace1 = race1;
             Race finalRace2 = race2;
-            Race finalRace3 = race3;
             assertThrows(InputValidationException.class, () -> raceService.addInscription(finalRace1.getRaceId(),VALID_MAIL,INVALID_CREDIT_CARD));
             assertThrows(InscriptionDateExpiredException.class, () -> raceService.addInscription(finalRace2.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
-            assertThrows(NoMoreInscriptionsAllowedException.class, () ->  raceService.addInscription(finalRace3.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
             inscriptionID = raceService.addInscription(race1.getRaceId(),VALID_MAIL,VALID_CREDIT_CARD);
             assertThrows(AlreadyInscriptedException.class, () -> raceService.addInscription(finalRace1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+            inscriptionID2 = raceService.addInscription(race1.getRaceId(),"example2@udc.es","1234123412341235");
+            assertThrows(NoMoreInscriptionsAllowedException.class, () ->  raceService.addInscription(finalRace1.getRaceId(), "example3@udc.es", "1234123412341236"));
         }finally{
             if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
+            if(inscriptionID2 != null){ removeInscription(findInscription(inscriptionID2));}
             if(race1 != null){ removeRace(race1);}
             if(race2 != null){ removeRace(race2);}
             if(race3 != null){ removeRace(race3);}
