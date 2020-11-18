@@ -403,7 +403,6 @@ public class RaceServiceTest {
             InscriptionDateExpiredException, AlreadyInscriptedException {
         Race race1 = null;
         Race race2 = null;
-        Race race3 = null;
 
         Long inscriptionID = null;
         Long inscriptionID2 = null;
@@ -418,14 +417,49 @@ public class RaceServiceTest {
             inscriptionID = raceService.addInscription(race1.getRaceId(),VALID_MAIL,VALID_CREDIT_CARD);
             assertThrows(AlreadyInscriptedException.class, () -> raceService.addInscription(finalRace1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
             inscriptionID2 = raceService.addInscription(race1.getRaceId(),"example2@udc.es","1234123412341235");
+            assertEquals(race1.getRaceId(), findInscription(inscriptionID).getRaceID());
+            assertEquals(race1.getRaceId(), findInscription(inscriptionID2).getRaceID());
             assertThrows(NoMoreInscriptionsAllowedException.class, () ->  raceService.addInscription(finalRace1.getRaceId(), "example3@udc.es", "1234123412341236"));
         }finally{
             if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
             if(inscriptionID2 != null){ removeInscription(findInscription(inscriptionID2));}
             if(race1 != null){ removeRace(race1);}
             if(race2 != null){ removeRace(race2);}
-            if(race3 != null){ removeRace(race3);}
 
         }
     }
+
+    @Test
+    void testFindInscriptions() throws InputValidationException,
+            InstanceNotFoundException,
+            NoMoreInscriptionsAllowedException,
+            InscriptionDateExpiredException, AlreadyInscriptedException{
+
+            Race race1 = null;
+            Race race2 = null;
+
+            Long inscriptionID = null;
+            Long inscriptionID2 = null;
+
+            List<Inscription> inscriptions = null;
+
+        try {
+            inscriptionID = raceService.addInscription(race1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD);
+            inscriptionID2 = raceService.addInscription(race2.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD);
+
+            inscriptions = raceService.findInscriptions(VALID_MAIL);
+
+            assertEquals(inscriptions.get(0).getInscriptionId(), inscriptionID);
+            assertEquals(inscriptions.get(1).getInscriptionId(), inscriptionID2);
+        }finally{
+
+            if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
+            if(inscriptionID2 != null){ removeInscription(findInscription(inscriptionID2));}
+            if(race1 != null){ removeRace(race1);}
+            if(race2 != null){ removeRace(race2);}
+            if(inscriptions != null){inscriptions.clear();}
+        }
+    }
 }
+
+
