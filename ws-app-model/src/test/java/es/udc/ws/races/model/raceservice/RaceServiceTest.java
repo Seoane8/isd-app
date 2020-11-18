@@ -7,17 +7,14 @@ import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
 import es.udc.ws.races.model.raceservice.exceptions.*;
-import es.udc.ws.races.model.raceservice.RaceService;
-import es.udc.ws.races.model.util.PropertyValidator;
-import es.udc.ws.races.model.util.exceptions.InstanceNotFoundException;
-import es.udc.ws.races.model.util.
+import es.udc.ws.util.exceptions.InputValidationException;
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
+import es.udc.ws.util.sql.DataSourceLocator;
 import es.udc.ws.util.sql.SimpleDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -54,7 +51,7 @@ public class RaceServiceTest {
         raceDao = SqlRaceDaoFactory.getDao();
         inscriptionDao = SqlInscriptionDaoFactory.getDao();
     }
-    private Race createRace(Race race) throws InputValidationException{
+    private Race createRace(Race race) throws InputValidationException {
 
         Race addedRace = null;
 

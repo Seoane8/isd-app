@@ -7,7 +7,6 @@ import es.udc.ws.races.model.race.Race;
 import es.udc.ws.races.model.race.SqlRaceDao;
 import es.udc.ws.races.model.race.SqlRaceDaoFactory;
 import es.udc.ws.races.model.raceservice.exceptions.*;
-import es.udc.ws.races.model.util.PropertyValidator;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
@@ -16,11 +15,9 @@ import es.udc.ws.util.validation.PropertyValidator;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Iterator;
 
 import static es.udc.ws.races.model.util.Constants.DATA_SOURCE;
 
