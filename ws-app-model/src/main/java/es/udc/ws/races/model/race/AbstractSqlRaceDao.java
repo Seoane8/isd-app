@@ -58,7 +58,7 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
 
     
     @Override
-    public List<Race> findRaces(Connection connection, LocalDateTime initDate, String city) throws InstanceNotFoundException {
+    public List<Race> findRaces(Connection connection, LocalDateTime initDate, String city) {
 
         /* Create "queryString". */
         String queryString = "SELECT raceId, maxParticipants, description, "

@@ -182,16 +182,16 @@ public class RaceServiceImpl implements RaceService{
         PropertyValidator.validateDouble("maxParticipants",(double) maxParticipants,1,1000);
         PropertyValidator.validateMandatoryString("description", description);
         PropertyValidator.validateDouble("inscriptionPrice", inscriptionPrice, 1, 1000000);
-        validateRaceDate(raceDate);
+        validateRaceDate(raceDate,city);
         PropertyValidator.validateMandatoryString("city", city);
     }
 
-    public void validateRaceDate(LocalDate raceDate){
-
-
-
-
-
+    public void validateRaceDate(LocalDate raceDate,String city){
+        if(raceDate.isBefore(LocalDate.now())){
+            throw new InputValidationException("Race with city=\"" + city +
+                    "\" race date before current date (raceDate = \"" +
+                    raceDate.toString() + "\") (currentDate = \"" +LocalDate.now().toString()+ "\")");
+        }
     }
 
 }
