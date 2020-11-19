@@ -92,11 +92,6 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
             /* Read bikes. */
             List<Race> races = new ArrayList<Race>();
 
-            if (!resultSet.next()) {
-                throw new InstanceNotFoundException(initDate,city,
-                        Race.class.getName());
-            }
-
             while (resultSet.next()) {
 
                int i = 1;

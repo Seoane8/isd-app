@@ -304,7 +304,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testFindRaces() {
+    public void testFindRaces() throws InputInvalidationException{
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;
