@@ -335,21 +335,7 @@ public class RaceServiceTest {
                 removeRace(race3);
             }
         }
-
-    @Test
-    public void testFindNonExistentRaces(){
-
-        assertThrows(InstanceNotFoundException.class, () -> {
-            List<Race> races = raceService.findRaces(VALID_RACE_DATE.toLocalDate(),VALID_CITY);
-            while (!races.isEmpty()){
-                removeRace(races.get(0));
-            }
-        });
-
-    }
-
-
-
+        
     @Test
     public void testCollectDorsalWithInvalidCreditCard(){
 
