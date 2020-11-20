@@ -36,7 +36,7 @@ public class RaceServiceImpl implements RaceService{
     @Override
     public Race addRace(String description, float inscriptionPrice, LocalDateTime raceDate, int maxParticipants, String raceLocation) throws InputValidationException {
 
-        //validateRace(maxParticipants,description,inscriptionPrice,raceDate,raceLocation);
+        validateRace(maxParticipants,description,inscriptionPrice,raceDate,raceLocation);
         try(Connection connection = dataSource.getConnection()){
 
 
@@ -178,19 +178,19 @@ public class RaceServiceImpl implements RaceService{
         }
     }
 
-    private void validateRace (int maxParticipants, String description, Float inscriptionPrice, LocalDate raceDate, String city) throws InputValidationException {
+    private void validateRace (int maxParticipants, String description, Float inscriptionPrice, LocalDateTime raceDate, String city) throws InputValidationException     {
         PropertyValidator.validateDouble("maxParticipants",(double) maxParticipants,1,1000);
         PropertyValidator.validateMandatoryString("description", description);
         PropertyValidator.validateDouble("inscriptionPrice", inscriptionPrice, 1, 1000000);
-        validateRaceDate(raceDate,city);
+        validateRaceDate(raceDate);
         PropertyValidator.validateMandatoryString("city", city);
     }
 
-    public void validateRaceDate(LocalDate raceDate,String city){
-        if(raceDate.isBefore(LocalDate.now())){
-            throw new InputValidationException("Race with city=\"" + city +
+    public void validateRaceDate(LocalDateTime raceDate){
+        if(raceDate.isBefore(LocalDateTime.now())){
+            throw new InputValidationException("Race with " +
                     "\" race date before current date (raceDate = \"" +
-                    raceDate.toString() + "\") (currentDate = \"" +LocalDate.now().toString()+ "\")");
+                    raceDate.toString() + "\") (currentDate = \"" +LocalDateTime.now().toString()+ "\")");
         }
     }
 
