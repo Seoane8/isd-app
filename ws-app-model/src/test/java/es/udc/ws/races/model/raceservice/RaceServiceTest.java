@@ -428,6 +428,9 @@ public class RaceServiceTest {
             List<Inscription> inscriptions = null;
 
         try {
+            race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+
             inscriptionID = raceService.addInscription(race1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD);
             inscriptionID2 = raceService.addInscription(race2.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD);
 
