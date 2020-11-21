@@ -377,29 +377,47 @@ public class RaceServiceTest {
             InscriptionDateExpiredException, AlreadyInscriptedException {
         Race race1 = null;
         Race race2 = null;
+        Race race3;
 
         Long inscriptionID = null;
         Long inscriptionID2 = null;
 
         try{
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 2, VALID_CITY);
-            race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, LocalDateTime.now(), VALID_PARTICIPANTS, VALID_CITY);
+            race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, LocalDateTime.now().plusHours(2), VALID_PARTICIPANTS, VALID_CITY);
+            race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 2, VALID_CITY);
+            removeRace(race3);
+
             Race finalRace1 = race1;
             Race finalRace2 = race2;
+            Race finalRace3 = race3;
+
+            assertThrows(InstanceNotFoundException.class, () -> raceService.addInscription(finalRace3.getRaceId(),VALID_MAIL,VALID_CREDIT_CARD));
             assertThrows(InputValidationException.class, () -> raceService.addInscription(finalRace1.getRaceId(),VALID_MAIL,INVALID_CREDIT_CARD));
             assertThrows(InscriptionDateExpiredException.class, () -> raceService.addInscription(finalRace2.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+
             inscriptionID = raceService.addInscription(race1.getRaceId(),VALID_MAIL,VALID_CREDIT_CARD);
+
+            Inscription foundInscription = findInscription(inscriptionID);
+
+            assertEquals(inscriptionID, foundInscription.getInscriptionId());
+            assertEquals(race1.getRaceId(), foundInscription.getRaceID());
+            assertEquals(VALID_MAIL, foundInscription.getMail());
+            assertEquals(VALID_CREDIT_CARD, foundInscription.getCredCardNumber());
+
             assertThrows(AlreadyInscriptedException.class, () -> raceService.addInscription(finalRace1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
+
             inscriptionID2 = raceService.addInscription(race1.getRaceId(),"example2@udc.es","1234123412341235");
+
             assertEquals(race1.getRaceId(), findInscription(inscriptionID).getRaceID());
             assertEquals(race1.getRaceId(), findInscription(inscriptionID2).getRaceID());
+
             assertThrows(NoMoreInscriptionsAllowedException.class, () ->  raceService.addInscription(finalRace1.getRaceId(), "example3@udc.es", "1234123412341236"));
         }finally{
             if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
             if(inscriptionID2 != null){ removeInscription(findInscription(inscriptionID2));}
             if(race1 != null){ removeRace(race1);}
             if(race2 != null){ removeRace(race2);}
-
         }
     }
 
@@ -416,6 +434,7 @@ public class RaceServiceTest {
         Long inscriptionID2 = null;
 
         List<Inscription> inscriptions = null;
+        List<Inscription> inscriptions2 = null;
 
         try {
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
@@ -426,8 +445,14 @@ public class RaceServiceTest {
 
             inscriptions = raceService.findInscriptions(VALID_MAIL);
 
+            assertEquals(2,inscriptions.size());
             assertEquals(inscriptions.get(0).getInscriptionId(), inscriptionID);
             assertEquals(inscriptions.get(1).getInscriptionId(), inscriptionID2);
+
+            inscriptions2 = raceService.findInscriptions("example2@udc.es");
+
+            assertEquals(0,inscriptions2.size());
+
         }finally{
 
             if(inscriptionID != null){ removeInscription(findInscription(inscriptionID));}
@@ -435,6 +460,7 @@ public class RaceServiceTest {
             if(race1 != null){ removeRace(race1);}
             if(race2 != null){ removeRace(race2);}
             if(inscriptions != null){inscriptions.clear();}
+            if(inscriptions2 != null){inscriptions2.clear();}
         }
     }
 }
