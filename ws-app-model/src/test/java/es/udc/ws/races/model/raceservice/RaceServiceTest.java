@@ -260,47 +260,69 @@ public class RaceServiceTest {
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;
-        Race raceDiferentCity = null;
         try {
 
+
+
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-12-01T11:30:00"), VALID_PARTICIPANTS, VALID_CITY);
+                    LocalDateTime.parse("2021-08-15T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
             race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+                    LocalDateTime.parse("2021-08-30T11:30:00"), VALID_PARTICIPANTS, "Santiago");
             race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-05-27T11:30:00"), VALID_PARTICIPANTS, VALID_CITY);
-            raceDiferentCity = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-04-01T11:30:00"), VALID_PARTICIPANTS,"Ferrol");
+                    LocalDateTime.parse("2021-09-08T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
 
 
-            //Deberia añadir a la lista las carreras race2 y race 3
-            List<Race> foundRaces = raceService.findRaces(LocalDate.parse("2021-02-01"), "A Coruña");
-            //Deberia añadir a la lista la carrera que se celebra en Ferrol
-            List<Race> foundDiferentRace = raceService.findRaces(LocalDate.parse("2021-01-01"), "Ferrol");
-            // Probamos a hacer una busqueda sin resultado, deberia devolver una lista vacia
-            List<Race> nofoundRace = raceService.findRaces(LocalDate.parse("2021-02-01"), "Coirós");
 
-            List<Race> nullCitySearch = raceService.findRaces(LocalDate.parse("2021-11-01"),null);
+            List<Race> races1 = raceService.findRaces(LocalDate.parse("2021-08-14"), "A Coruña");
+            List<Race> races2 = raceService.findRaces(LocalDate.parse("2021-09-01"), "Santiago");
+            List<Race> races3 = raceService.findRaces(LocalDate.parse("2021-09-01"), "A Coruña");
+            List<Race> races4 = raceService.findRaces(LocalDate.parse("2021-09-20"), "A Coruña");
+            List<Race> races5 = raceService.findRaces(LocalDate.parse("2021-08-04"), null);
+            List<Race> races6 = raceService.findRaces(LocalDate.parse("2021-09-01"), null);
 
-            assertEquals(2,foundRaces.size());
-            assertEquals(race2, foundRaces.get(0));
-            assertEquals(race3, foundRaces.get(1));
-            //Search with different city
-            assertEquals(1,foundDiferentRace.size());
-            assertEquals(raceDiferentCity,foundDiferentRace.get(0));
-            //Search with no results
-            assertTrue(nofoundRace.isEmpty());
-            //Search with city=null
-            assertEquals(1,nullCitySearch.size());
-            assertEquals(nullCitySearch.get(0),race1);
+
+
+            assertEquals(0, races1.size());
+
+
+
+            assertEquals(1, races2.size());
+            assertEquals(race2, races2.get(0));
+
+
+
+            assertEquals(1, races3.size());
+            assertEquals(race1, races3.get(0));
+
+
+
+            assertEquals(2, races4.size());
+            assertEquals(race1, races4.get(0));
+            assertEquals(race3, races4.get(1));
+
+
+
+            assertEquals(0, races5.size());
+
+
+
+            assertEquals(2, races6.size());
+            assertEquals(race1, races6.get(0));
+            assertEquals(race2, races6.get(1));
+
+
+
 
         } finally {
-            if (race1!=null)
+            if (race1 != null){
                 removeRace(race1);
-            if (race2!=null)
+            }
+            if (race2 != null){
                 removeRace(race2);
-            if (race3!=null)
+            }
+            if (race3 != null){
                 removeRace(race3);
+            }
         }
     }
 
