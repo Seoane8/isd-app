@@ -186,7 +186,7 @@ public class RaceServiceImpl implements RaceService{
         PropertyValidator.validateMandatoryString("city", city);
     }
 
-    public void validateRaceDate(LocalDateTime raceDate){
+    public void validateRaceDate(LocalDateTime raceDate) throws InputValidationException {
         if(raceDate.isBefore(LocalDateTime.now())){
             throw new InputValidationException("Race with " +
                     "\" race date before current date (raceDate = \"" +

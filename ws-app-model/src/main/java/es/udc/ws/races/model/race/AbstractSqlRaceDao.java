@@ -59,30 +59,36 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
     
     @Override
     public List<Race> findRaces(Connection connection, LocalDateTime initDate, String city) {
+	    initDate = initDate.withNano(0);
 
         /* Create "queryString". */
         String queryString = "SELECT raceId, maxParticipants, description, "
-                + "  price, raceDate, city, creationDate, participants FROM Race";
-        if (city != null || initDate != null)
+                + " price, raceDate, city, creationDate, participants FROM Race";
+        if (city != null || initDate != null){
             queryString += " WHERE";
-        if (city != null) {
-            queryString += "raceLocation = (?)";
         }
         if (initDate != null) {
-            queryString += "AND rentDate <= (?)";
+            queryString += " raceDate <= (?)";
+            //queryString += " AND raceDate >= (?)";
+        }
+        if (city != null) {
+            queryString += " AND city = (?)";
         }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
             int j = 1;
 
+            if (initDate != null) {
+                Timestamp raceDate = initDate != null ? new Timestamp(
+                        Timestamp.valueOf(initDate).getTime()) : null;
+                preparedStatement.setTimestamp(j++, raceDate);
+                /*Timestamp nowDate = new Timestamp(
+                        Timestamp.valueOf(LocalDateTime.now()).getTime());
+                preparedStatement.setTimestamp(j++, nowDate);*/
+            }
             if (city != null) {
                 /* Fill "preparedStatement". */
                 preparedStatement.setString(j++,city);
-            }
-            if (initDate != null) {
-                Timestamp raceDate = initDate!= null ? new Timestamp(
-                        Timestamp.valueOf(initDate).getTime()) : null;
-                preparedStatement.setTimestamp(j++, raceDate);
             }
 
             /* Execute query. */
