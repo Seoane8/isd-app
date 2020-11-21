@@ -155,106 +155,60 @@ public class RaceServiceTest {
 
     @Test
     public void testAddInvalidRace() throws InputValidationException, SQLException{
-        Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
-        Race addedRace = null;
-        boolean exceptionCatched = false;
 
-        try {
-            // Check maxparticipants not valid
-            race.setMaxParticipants(-3);
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+        // Check maxparticipants is >=1
 
-            // Check maxparticipants isn't 0
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setMaxParticipants(0);
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
-            // Check description isn't null
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        // Check description isn't null
+
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setDescription(null);
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
-            // Check description isn't empty
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        // Check description isn't empty
+
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setDescription("");
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
-            // Check race price >= 0
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        // Check race price >= 0
+
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setInscriptionPrice(-5);
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
-            // Check raceLocation is correct
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
-            race.setRaceLocation("A Coruña%");
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+        //Check raceLocation isn't null
 
-            //Check raceLocation isn't null
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setRaceLocation(null);
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
-            //Check raceLocation isn't empty
-            exceptionCatched = false;
-            race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
+        //Check raceLocation isn't empty
+
+        assertThrows(InputValidationException.class, () -> {
+            Race race = new Race(10,VALID_DESCRIPTION,VALID_PRICE,VALID_RACE_DATE,VALID_CITY,VALID_PARTICIPANTS);
             race.setRaceLocation("");
-            try {
-                addedRace = createRace(race);
-            } catch (InputValidationException e) {
-                exceptionCatched = true;
-            }
-            assertTrue(exceptionCatched);
-
-
-        } finally {
-            if (!exceptionCatched) {
-                // Clear Database
-                if(addedRace != null) {
-                    removeRace(addedRace);
-                }
-            }
-        }
+            Race addedRace = createRace(race);
+            removeRace(addedRace);
+        });
 
     }
 
@@ -308,34 +262,47 @@ public class RaceServiceTest {
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;
+        Race raceDiferentCity = null;
         try {
-            LocalDateTime beforeAddDate = LocalDateTime.now().withNano(0);
 
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+                    LocalDateTime.parse("2021-12-01"), VALID_PARTICIPANTS, VALID_CITY);
             race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    VALID_RACE_DATE, VALID_PARTICIPANTS, "A Coruña");
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
             race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2020-08-31T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
+                    LocalDateTime.parse("2021-05-27"), VALID_PARTICIPANTS, VALID_CITY);
+            raceDiferentCity = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    LocalDateTime.parse("2021-04-01"), VALID_PARTICIPANTS,"Ferrol");
 
 
-            LocalDateTime afterAddDate = LocalDateTime.now().withNano(0);
             //Deberia añadir a la lista las carreras race2 y race 3
-            List<Race> foundRace = raceService.findRaces(LocalDate.parse("2020-09-01T11:30:00"), "A Coruña");
-            // Probamos a hacer una busqueda incorrecta, deberia devolver una lista vacia
-            List<Race> nofoundRace = raceService.findRaces(LocalDate.parse("2019-09-01T11:30:30"), "A Coruña");
-            assertEquals(race2, foundRace.get(0));
-            assertEquals(race3, foundRace.get(1));
+            List<Race> foundRaces = raceService.findRaces(LocalDate.parse("2021-02-01"), "A Coruña");
+            //Deberia añadir a la lista la carrera que se celebra en Ferrol
+            List<Race> foundDiferentRace = raceService.findRaces(LocalDate.parse("2021-01-01"), "Ferrol");
+            // Probamos a hacer una busqueda sin resultado, deberia devolver una lista vacia
+            List<Race> nofoundRace = raceService.findRaces(LocalDate.parse("2021-02-01"), "Coirós");
+
+            assertEquals(2,foundRaces.size());
+            assertEquals(race2, foundRaces.get(0));
+            assertEquals(race3, foundRaces.get(1));
+            //Busqueda en una ciudad distinta
+            assertEquals(1,foundDiferentRace);
+            assertEquals(raceDiferentCity,foundDiferentRace.get(0));
+            //Búsqueda sin resultados
             assertTrue(nofoundRace.isEmpty());
+            //Búsqueda incorrecta (ciudad=null)
+            assertThrows(InputValidationException.class, () -> raceService.findRaces(LocalDate.parse("2021-09-01"),null));
 
         } finally {
-
+            if (race1!=null)
                 removeRace(race1);
+            if (race2!=null)
                 removeRace(race2);
+            if (race3!=null)
                 removeRace(race3);
-            }
         }
-        
+    }
+
     @Test
     public void testCollectDorsalWithInvalidCreditCard(){
 
@@ -419,13 +386,13 @@ public class RaceServiceTest {
             NoMoreInscriptionsAllowedException,
             InscriptionDateExpiredException, AlreadyInscriptedException{
 
-            Race race1 = null;
-            Race race2 = null;
+        Race race1 = null;
+        Race race2 = null;
 
-            Long inscriptionID = null;
-            Long inscriptionID2 = null;
+        Long inscriptionID = null;
+        Long inscriptionID2 = null;
 
-            List<Inscription> inscriptions = null;
+        List<Inscription> inscriptions = null;
 
         try {
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
