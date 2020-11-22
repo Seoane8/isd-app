@@ -236,11 +236,12 @@ public class RaceServiceTest {
             Long inscriptionId = raceService.addInscription(race.getRaceId(),
                     VALID_MAIL, VALID_CREDIT_CARD);
 
-            raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId);
+            int dorsal = raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId);
 
             inscription = findInscription(inscriptionId);
 
             assertTrue(inscription.isDorsalCollected());
+            assertEquals(inscription.getDorsal(), dorsal);
 
             assertThrows(AlreadyCollectedException.class, () ->
                     raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId));

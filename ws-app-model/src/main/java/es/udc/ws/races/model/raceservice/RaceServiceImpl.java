@@ -139,7 +139,7 @@ public class RaceServiceImpl implements RaceService{
     }
 
     @Override
-    public void collectDorsal(String creditCard, Long inscriptionId) throws InputValidationException, InstanceNotFoundException, AlreadyCollectedException, IncorrectCreditCardException {
+    public int collectDorsal(String creditCard, Long inscriptionId) throws InputValidationException, InstanceNotFoundException, AlreadyCollectedException, IncorrectCreditCardException {
         PropertyValidator.validateCreditCard(creditCard);
 
         try (Connection connection = dataSource.getConnection()){
@@ -163,6 +163,8 @@ public class RaceServiceImpl implements RaceService{
                 inscriptionDao.update(connection, inscription);
 
                 connection.commit();
+
+                return inscription.getDorsal();
             } catch (InstanceNotFoundException e){
                 connection.commit();
                 throw e;

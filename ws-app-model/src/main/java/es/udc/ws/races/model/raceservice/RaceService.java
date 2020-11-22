@@ -27,7 +27,7 @@ public interface RaceService {
     public List<Inscription> findInscriptions(String mail)
             throws InputValidationException;
 
-    public void collectDorsal(String creditCard, Long inscriptionId)
+    public int collectDorsal(String creditCard, Long inscriptionId)
             throws InputValidationException, InstanceNotFoundException,
             AlreadyCollectedException, IncorrectCreditCardException;
 }
