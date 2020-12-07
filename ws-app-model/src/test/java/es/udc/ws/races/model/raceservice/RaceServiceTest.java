@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RaceServiceTest {
     private final String VALID_DESCRIPTION = "Description of a new race";
     private final float VALID_PRICE = 9.95f;
-    private final LocalDateTime VALID_RACE_DATE = LocalDateTime.parse("2021-08-22T11:30:00");
+    private final LocalDateTime VALID_RACE_DATE = LocalDateTime.now().plusDays(90).withNano(0);
     private final int VALID_PARTICIPANTS = 130;
     private final String VALID_CITY = "A Coruña";
     private final long INVALID_RACEID = -1;
@@ -222,7 +222,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testCollectDorsalAndAlreadyCollectedDorsal() throws InputValidationException,
+    public void testCollectDorsal() throws InputValidationException,
             InstanceNotFoundException, AlreadyCollectedException,
             IncorrectCreditCardException, NoMoreInscriptionsAllowedException,
             InscriptionDateExpiredException, AlreadyInscriptedException {
@@ -242,9 +242,6 @@ public class RaceServiceTest {
 
             assertTrue(inscription.isDorsalCollected());
             assertEquals(inscription.getDorsal(), dorsal);
-
-            assertThrows(AlreadyCollectedException.class, () ->
-                    raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId));
 
         } finally{
             if (inscription != null){
@@ -360,6 +357,37 @@ public class RaceServiceTest {
 
             //Necessary to remove inscription
             inscription = findInscription(inscriptionId);
+
+        } finally{
+            if (inscription != null){
+                removeInscription(inscription);
+            }
+            if (race != null){
+                removeRace(race);
+            }
+        }
+    }
+
+    @Test
+    public void testAlreadyCollectedDorsal() throws InputValidationException,
+            AlreadyInscriptedException, InscriptionDateExpiredException,
+            NoMoreInscriptionsAllowedException, InstanceNotFoundException,
+            AlreadyCollectedException, IncorrectCreditCardException {
+        Race race = null;
+        Inscription inscription = null;
+
+        try{
+            race = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
+                    VALID_RACE_DATE, VALID_PARTICIPANTS, VALID_CITY);
+            Long inscriptionId = raceService.addInscription(race.getRaceId(),
+                    VALID_MAIL, VALID_CREDIT_CARD);
+
+            raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId);
+
+            inscription = findInscription(inscriptionId);
+
+            assertThrows(AlreadyCollectedException.class, () ->
+                    raceService.collectDorsal(VALID_CREDIT_CARD, inscriptionId));
 
         } finally{
             if (inscription != null){
