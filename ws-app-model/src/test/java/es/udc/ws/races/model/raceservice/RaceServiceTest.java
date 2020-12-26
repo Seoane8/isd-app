@@ -438,7 +438,9 @@ public class RaceServiceTest {
             assertThrows(AlreadyInscriptedException.class, () -> raceService.addInscription(finalRace1.getRaceId(), VALID_MAIL, VALID_CREDIT_CARD));
 
             inscriptionID2 = raceService.addInscription(race1.getRaceId(),"example2@udc.es","1234123412341235");
+            race1 = raceService.findRace(race1.getRaceId());
 
+            assertEquals(2,race1.getParticipants());
             assertEquals(race1.getRaceId(), findInscription(inscriptionID).getRaceID());
             assertEquals(race1.getRaceId(), findInscription(inscriptionID2).getRaceID());
 
