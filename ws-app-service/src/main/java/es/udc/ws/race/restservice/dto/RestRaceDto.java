@@ -1,8 +1,8 @@
-package es.udc.ws.raceService.dto;
+package es.udc.ws.race.restservice.dto;
 
 import java.time.LocalDateTime;
 
-public class ServiceRaceDto {
+public class RestRaceDto {
 
     private Long raceId;
     private int maxParticipants;
@@ -14,10 +14,10 @@ public class ServiceRaceDto {
     private int participants;
 
 
-    public ServiceRaceDto() {
+    public RestRaceDto() {
     }
 
-    public ServiceRaceDto(int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation, int participants) {
+    public RestRaceDto(int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation, int participants) {
         this.maxParticipants = maxParticipants;
         this.description = description;
         this.inscriptionPrice = inscriptionPrice;
@@ -25,7 +25,7 @@ public class ServiceRaceDto {
         this.raceLocation = raceLocation;
         this.participants = participants;
     }
-    public ServiceRaceDto(Long raceId , int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation,LocalDateTime creationDate,int participants){
+    public RestRaceDto(Long raceId , int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation, LocalDateTime creationDate, int participants){
         this(maxParticipants, description, inscriptionPrice, raceDate, raceLocation,participants);
         this.raceId = raceId;
         this.creationDate = creationDate;
@@ -68,7 +68,7 @@ public class ServiceRaceDto {
         return raceDate;
     }
 
-    public void setRentDate(LocalDateTime raceDate) {
+    public void setRentDate(LocalDateTime rentDate) {
         this.raceDate = raceDate;
     }
 

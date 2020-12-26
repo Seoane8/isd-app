@@ -1,8 +1,8 @@
-package es.udc.ws.raceService.dto;
+package es.udc.ws.race.restservice.dto;
 
 import java.time.LocalDateTime;
 
-public class ServiceInscriptionDto {
+public class RestInscriptionDto {
 
     private long inscriptionId;
     private long raceID;
@@ -13,9 +13,9 @@ public class ServiceInscriptionDto {
     private boolean dorsalCollected;
     private float price;
 
-    public ServiceInscriptionDto(){}
+    public RestInscriptionDto(){}
 
-    public ServiceInscriptionDto(long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
+    public RestInscriptionDto(long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
         this.raceID = raceID;
         this.mail = mail;
         this.credCardNumber = credCardNumber;
@@ -25,7 +25,7 @@ public class ServiceInscriptionDto {
         this.price = price;
     }
 
-    public ServiceInscriptionDto(long inscriptionId, long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
+    public RestInscriptionDto(long inscriptionId, long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
         this(raceID, mail, credCardNumber, reservationDate ,dorsal, dorsalCollected, price);
         this.inscriptionId = inscriptionId;
     }
