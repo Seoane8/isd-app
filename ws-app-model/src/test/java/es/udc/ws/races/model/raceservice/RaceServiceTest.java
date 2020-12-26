@@ -214,7 +214,7 @@ public class RaceServiceTest {
     @Test
     public void testFindNonExistentRace(){
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(InstanceNotFoundException.class, () -> {
             Race race = raceService.findRace(INVALID_RACEID);
             removeRace(race);
         });
@@ -270,8 +270,7 @@ public class RaceServiceTest {
             race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
                     LocalDateTime.parse("2021-09-08T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
 
-            race4 =raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.now(), VALID_PARTICIPANTS, "A Coruña");
+
 
             List<Race> races1 = raceService.findRaces(LocalDate.parse("2021-08-14"), "A Coruña");
             List<Race> races2 = raceService.findRaces(LocalDate.parse("2021-09-01"), "Santiago");
@@ -335,7 +334,7 @@ public class RaceServiceTest {
     @Test
     public void testCollectDorsalOfNonExistentInscription(){
 
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(InstanceNotFoundException.class, () ->
                 raceService.collectDorsal(VALID_CREDIT_CARD, INVALID_INSCRIPTION_ID));
     }
 
