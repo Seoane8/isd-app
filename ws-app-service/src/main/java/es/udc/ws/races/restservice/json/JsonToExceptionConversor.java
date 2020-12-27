@@ -1,4 +1,4 @@
-package es.udc.ws.race.restservice.json;
+package es.udc.ws.races.restservice.json;
 
 public class JsonToExceptionConversor {
 }

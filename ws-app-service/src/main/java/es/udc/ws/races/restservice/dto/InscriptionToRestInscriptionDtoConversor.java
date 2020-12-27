@@ -1,4 +1,4 @@
-package es.udc.ws.race.restservice.dto;
+package es.udc.ws.races.restservice.dto;
 
 import es.udc.ws.races.model.inscription.Inscription;
 
