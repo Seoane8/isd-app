@@ -10,25 +10,25 @@ public class RestRaceDto {
     private float inscriptionPrice;
     private LocalDateTime raceDate;
     private String raceLocation;
-    private LocalDateTime creationDate;
     private int participants;
 
 
     public RestRaceDto() {
     }
 
-    public RestRaceDto(int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation, int participants) {
+    public RestRaceDto(int maxParticipants, String description, float inscriptionPrice,
+                       LocalDateTime raceDate, String raceLocation) {
         this.maxParticipants = maxParticipants;
         this.description = description;
         this.inscriptionPrice = inscriptionPrice;
         this.raceDate = raceDate;
         this.raceLocation = raceLocation;
-        this.participants = participants;
     }
-    public RestRaceDto(Long raceId , int maxParticipants, String description, float inscriptionPrice, LocalDateTime raceDate, String raceLocation, LocalDateTime creationDate, int participants){
-        this(maxParticipants, description, inscriptionPrice, raceDate, raceLocation,participants);
+    public RestRaceDto(Long raceId , int maxParticipants, String description, float inscriptionPrice,
+                       LocalDateTime raceDate, String raceLocation, int participants){
+        this(maxParticipants, description, inscriptionPrice, raceDate, raceLocation);
         this.raceId = raceId;
-        this.creationDate = creationDate;
+        this.participants = participants;
     }
 
 
@@ -86,13 +86,6 @@ public class RestRaceDto {
 
     public void setParticipants(int participants) {
         this.participants = participants;
-    }
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 
     @Override

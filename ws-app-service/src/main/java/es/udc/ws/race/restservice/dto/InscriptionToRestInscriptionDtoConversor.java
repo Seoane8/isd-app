@@ -1,6 +1,5 @@
 package es.udc.ws.race.restservice.dto;
 
-import es.udc.ws.race.restservice.ServiceInscriptionDto;
 import es.udc.ws.races.model.inscription.Inscription;
 
 import java.util.ArrayList;

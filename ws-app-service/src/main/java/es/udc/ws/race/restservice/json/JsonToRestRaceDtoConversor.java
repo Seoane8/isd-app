@@ -42,8 +42,7 @@ public class JsonToRestRaceDtoConversor {
     public static ArrayNode toArrayNode(List<RestRaceDto> races) {
 
         ArrayNode racesNode = JsonNodeFactory.instance.arrayNode();
-        for (int i = 0; i < races.size(); i++) {
-            RestRaceDto raceDto = races.get(i);
+        for (RestRaceDto raceDto : races) {
             ObjectNode raceObject = toObjectNode(raceDto);
             racesNode.add(raceObject);
         }
@@ -70,10 +69,9 @@ public class JsonToRestRaceDtoConversor {
                 String raceDateString = raceObject.get("raceDate").textValue().trim();
                 LocalDateTime raceDate = LocalDateTime.parse(raceDateString);
                 String raceLocation = raceObject.asText().trim();
-                String creationDateString = raceObject.get("raceDate").textValue().trim();
-                LocalDateTime creationDate = LocalDateTime.parse(raceDateString);
                 int participants = raceObject.get("participants").asInt();
-                return new RestRaceDto(raceId , maxParticipants,description,inscriptionPrice,raceDate,raceLocation,creationDate,participants);
+                return new RestRaceDto(raceId, maxParticipants, description, inscriptionPrice,
+                        raceDate, raceLocation, participants);
             }
         } catch (ParsingException ex) {
             throw ex;
@@ -83,9 +81,8 @@ public class JsonToRestRaceDtoConversor {
     }
 
     private static String getRaceDate(LocalDateTime raceDate) {
-        String releaseDateString = sdf.format(raceDate);
 
-        return releaseDateString;
+        return sdf.format(raceDate);
 
     }
 }
