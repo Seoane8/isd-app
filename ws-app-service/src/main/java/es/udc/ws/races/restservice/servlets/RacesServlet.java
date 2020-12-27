@@ -33,10 +33,10 @@ public class RacesServlet extends HttpServlet {
 
         try {
             raceId = Long.valueOf(raceIdString);
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException e) {
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                     JsonToExceptionConversor.toInputValidationException(
-                            new InputValidationException("Invalid Request: invalid race id '" + path + "'")),
+                            new InputValidationException("Invalid Request: invalid race id '" + raceIdString + "'")),
                     null);
 
             return;
@@ -46,9 +46,9 @@ public class RacesServlet extends HttpServlet {
 
         try {
             race = RaceServiceFactory.getService().findRace(raceId);
-        } catch (InstanceNotFoundException ex) {
+        } catch (InstanceNotFoundException e) {
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
-                    JsonToExceptionConversor.toInstanceNotFoundException(ex),
+                    JsonToExceptionConversor.toInstanceNotFoundException(e),
                     null);
             return;
         }
