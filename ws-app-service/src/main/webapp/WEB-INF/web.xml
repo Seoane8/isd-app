@@ -25,6 +25,20 @@
         <url-pattern>/races/*</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <display-name>InscriptionsServlet</display-name>
+        <servlet-name>InscriptionsServlet</servlet-name>
+        <servlet-class>
+            es.udc.ws.races.restservice.servlets.InscriptionsServlet
+        </servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>InscriptionsServlet</servlet-name>
+        <url-pattern>/inscriptions/*</url-pattern>
+    </servlet-mapping>
+
    <!-- Thrift service -->
    <!-- Fill XXX and uncomment the following lines --> 
    <!--
