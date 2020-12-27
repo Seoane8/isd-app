@@ -155,11 +155,11 @@ public class RaceServiceImpl implements RaceService{
 
                 if (!inscription.getCredCardNumber().equals(creditCard)){
                     connection.commit();
-                    throw new IncorrectCreditCardException();
+                    throw new IncorrectCreditCardException(inscriptionId, inscription.getMail());
                 }
                 if (inscription.isDorsalCollected()){
                     connection.commit();
-                    throw new AlreadyCollectedException();
+                    throw new AlreadyCollectedException(inscriptionId, inscription.getMail());
                 }
 
                 inscription.setDorsalCollected(true);
