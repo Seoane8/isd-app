@@ -141,7 +141,9 @@ public class RacesServlet extends HttpServlet {
                 List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);
                 ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
                         JsonToRestRaceDtoConversor.toArrayNode(raceDtos), null);
+                return;
             }
+        }
 
             String raceIdString = path.substring(1);
             Long raceId;
@@ -174,4 +176,4 @@ public class RacesServlet extends HttpServlet {
                     JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
         }
     }
-}
+
