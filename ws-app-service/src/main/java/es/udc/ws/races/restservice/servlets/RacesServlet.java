@@ -1,7 +1,6 @@
 package es.udc.ws.races.restservice.servlets;
 
 import es.udc.ws.races.model.race.Race;
-import es.udc.ws.races.model.raceservice.RaceService;
 import es.udc.ws.races.model.raceservice.RaceServiceFactory;
 import es.udc.ws.races.restservice.dto.RaceToRestRaceDtoConversor;
 import es.udc.ws.races.restservice.dto.RestRaceDto;
@@ -17,10 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class RacesServlet extends HttpServlet {
@@ -64,61 +61,6 @@ public class RacesServlet extends HttpServlet {
                 JsonToRestRaceDtoConversor.toObjectNode(raceDto), headers);
     }
 
-    /*@Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = ServletUtils.normalizePath(req.getPathInfo());
-        if (path == null || path.length() == 0) {
-            String city = req.getParameter("city");
-            String dateString;
-            List<Race> races = new ArrayList<>();
-            if (!((dateString = req.getParameter("city"))==(null))) {
-                LocalDate date = LocalDate.parse("2021-12-31");
-                date.from(LocalDate.parse(dateString));
-
-                try {
-                    races = RaceServiceFactory.getService().findRaces(date,city);
-                } catch (InputValidationException e) {
-                    e.printStackTrace();
-                }
-
-                List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
-                    JsonToRestRaceDtoConversor.toArrayNode(raceDtos), null);
-        } else if (path != null || path.length() != 0){
-            String raceIdAsString = path.substring(1);
-            Long raceId;
-            try {
-                raceId = Long.valueOf(raceIdAsString);
-            } catch (NumberFormatException ex) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                        JsonToExceptionConversor.toInputValidationException(new InputValidationException(
-                                "Invalid Request: " + "invalid bike id '" + raceIdAsString + "'")),
-                        null);
-                return;
-            }
-
-            Race race;
-            try {
-                race = RaceServiceFactory.getService().findRace(raceId);
-                RestRaceDto raceDto = RaceToRestRaceDtoConversor.toRaceDto(race);
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
-                        JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
-
-            } catch (InstanceNotFoundException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND, JsonToExceptionConversor
-                        .toInstanceNotFoundException(e), null);
-            }
-
-	/*	} else {
-
-			ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-					JsonServiceExceptionConversor.toInputValidationException(
-							new InputValidationException("Invalid Request: " + "invalid path " + path)),
-					null);
-		}
-        }
-    }*/
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -145,35 +87,35 @@ public class RacesServlet extends HttpServlet {
             }
         }
 
-            String raceIdString = path.substring(1);
-            Long raceId;
+        String raceIdString = path.substring(1);
+        Long raceId;
 
-            try {
-                raceId = Long.valueOf(raceIdString);
-            } catch (NumberFormatException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                        JsonToExceptionConversor.toInputValidationException(
-                                new InputValidationException("Invalid Request: invalid race id '" + raceIdString + "'")),
-                        null);
+        try {
+            raceId = Long.valueOf(raceIdString);
+        } catch (NumberFormatException e) {
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                    JsonToExceptionConversor.toInputValidationException(
+                            new InputValidationException("Invalid Request: invalid race id '" + raceIdString + "'")),
+                    null);
 
-                return;
-            }
-
-            Race race;
-
-            try {
-                race = RaceServiceFactory.getService().findRace(raceId);
-            } catch (InstanceNotFoundException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
-                        JsonToExceptionConversor.toInstanceNotFoundException(e),
-                        null);
-                return;
-            }
-
-            RestRaceDto raceDto = RaceToRestRaceDtoConversor.toRaceDto(race);
-
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
-                    JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
+            return;
         }
+
+        Race race;
+
+        try {
+            race = RaceServiceFactory.getService().findRace(raceId);
+        } catch (InstanceNotFoundException e) {
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                    JsonToExceptionConversor.toInstanceNotFoundException(e),
+                    null);
+            return;
+        }
+
+        RestRaceDto raceDto = RaceToRestRaceDtoConversor.toRaceDto(race);
+
+        ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
     }
+}
 
