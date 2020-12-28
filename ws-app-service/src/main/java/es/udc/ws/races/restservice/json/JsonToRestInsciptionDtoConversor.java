@@ -30,8 +30,8 @@ public class JsonToRestInsciptionDtoConversor {
                     put("creditCardNumber", inscription.getCredCardNumber()).
                     put("price", inscription.getPrice()).
                     put("dorsal", inscription.getDorsal()).
-                    put("dosalCollected",inscription.isDorsalCollected()).
-                    put("reservationDate",getInscriptionDate(inscription.getReservationDate()));
+                    put("dosalCollected", inscription.isDorsalCollected()).
+                    put("reservationDate", inscription.getReservationDate());
 
             return inscriptionNode;
         }
@@ -45,15 +45,6 @@ public class JsonToRestInsciptionDtoConversor {
             }
 
             return inscriptionsObject;
-        }
-
-
-        private static String getInscriptionDate(LocalDateTime reservationDate) {
-
-            String releaseDateString = sdf.format(reservationDate);
-
-            return releaseDateString;
-
         }
 }
 
