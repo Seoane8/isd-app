@@ -26,11 +26,11 @@ public class InscriptionsServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
         if (path == null || path.length() == 0){
 
-            String raceID = req.getParameter("raceID");
-            if(raceID == null){
+            String raceId = req.getParameter("race");
+            if(raceId == null){
                 ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toInputValidationException(
-                                new InputValidationException("Invalid Request: parameter 'raceID' is required")),
+                                new InputValidationException("Invalid Request: parameter 'raceId' is required")),
                         null);
                 return;
             }
@@ -56,7 +56,7 @@ public class InscriptionsServlet extends HttpServlet {
             long inscriptionID;
 
             try{
-                inscriptionID = RaceServiceFactory.getService().addInscription(Long.parseLong(raceID),mail,creditCard);
+                inscriptionID = RaceServiceFactory.getService().addInscription(Long.parseLong(raceId),mail,creditCard);
             }
             catch (InstanceNotFoundException e) {
                 ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
