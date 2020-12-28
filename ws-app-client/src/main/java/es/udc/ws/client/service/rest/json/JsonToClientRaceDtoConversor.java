@@ -91,10 +91,10 @@ public class JsonToClientRaceDtoConversor {
 
                 int maxParticipants = raceObject.get("maxParticipants").asInt();
                 String description = raceObject.get("description").textValue().trim();
-                float inscriptionPrice = raceObject.get("price").floatValue();
+                float inscriptionPrice = raceObject.get("inscriptionPrice").floatValue();
                 String raceDateString = raceObject.get("raceDate").textValue().trim();
                 LocalDateTime raceDate = LocalDateTime.parse(raceDateString);
-                String raceLocation = raceObject.asText().trim();
+                String raceLocation = raceObject.get("raceLocation").textValue().trim();
                 int participants = raceObject.get("participants").asInt();
                 return new ClientRaceDto(raceId, maxParticipants, description, inscriptionPrice,
                         raceDate, raceLocation, participants);

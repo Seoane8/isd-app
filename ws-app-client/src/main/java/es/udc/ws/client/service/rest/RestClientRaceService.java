@@ -1,18 +1,23 @@
 package es.udc.ws.client.service.rest;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import es.udc.ws.client.service.ClientRaceService;
 import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
 import es.udc.ws.client.service.exceptions.*;
+import es.udc.ws.client.service.rest.json.JsonToClientExceptionConversor;
 import es.udc.ws.client.service.rest.json.JsonToClientRaceDtoConversor;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.json.ObjectMapperFactory;
+import es.udc.ws.util.json.exceptions.ParsingException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
@@ -116,7 +121,20 @@ public class RestClientRaceService implements ClientRaceService {
     @Override
     public ClientRaceDto findRace(Long raceID)
             throws InstanceNotFoundException {
-        return null;
+
+        try{
+
+            HttpResponse response = Request.Get(getEndpointAddress() + "races/" + raceID).execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            return JsonToClientRaceDtoConversor.toClientRaceDto(response.getEntity().getContent());
+
+        } catch (InstanceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -157,6 +175,26 @@ public class RestClientRaceService implements ClientRaceService {
     public int collectDorsal(String creditCard, Long inscriptionId)
             throws InputValidationException, InstanceNotFoundException,
             ClientAlreadyCollectedException, ClientIncorrectCreditCardException {
-        return 0;
+
+        try{
+
+            HttpResponse response = Request.Post(getEndpointAddress() + "inscriptions/" + inscriptionId + "/collect").
+                    bodyForm(Form.form().add("creditCardNumber", creditCard).build()).execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            ObjectMapper mapper = ObjectMapperFactory.instance();
+            JsonNode jsonMap = mapper.readTree(response.getEntity().getContent());
+            if (jsonMap.getNodeType() != JsonNodeType.OBJECT) {
+                throw new ParsingException("Unrecognized JSON (object expected)");
+            }
+            return jsonMap.get("dorsal").asInt();
+
+        } catch (InputValidationException | InstanceNotFoundException |
+                ClientAlreadyCollectedException | ClientIncorrectCreditCardException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
