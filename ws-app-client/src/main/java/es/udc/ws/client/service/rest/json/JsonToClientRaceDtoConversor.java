@@ -20,9 +20,6 @@ import java.util.Locale;
 
 public class JsonToClientRaceDtoConversor {
 
-    public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
-
     public static ObjectNode toObjectNode(ClientRaceDto race) throws IOException {
 
         ObjectNode raceObject = JsonNodeFactory.instance.objectNode();
@@ -33,7 +30,7 @@ public class JsonToClientRaceDtoConversor {
         raceObject.put("maxParticipants", race.getMaxParticipants()).
                 put("description", race.getDescription()).
                 put("inscriptionPrice", race.getInscriptionPrice()).
-                put("raceDate", getRaceDate(race.getRaceDate())).
+                put("raceDate", race.getRaceDate().toString()).
                 put("raceLocation", race.getRaceLocation()).
                 put("participants", race.getParticipants());
 
@@ -103,11 +100,6 @@ public class JsonToClientRaceDtoConversor {
                         raceDate, raceLocation, participants);
             }
 
-
-    }
-    private static String getRaceDate(LocalDateTime raceDate) {
-
-        return sdf.format(raceDate);
 
     }
 }
