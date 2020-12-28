@@ -11,15 +11,9 @@ import es.udc.ws.util.json.ObjectMapperFactory;
 import es.udc.ws.util.json.exceptions.ParsingException;
 
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 public class JsonToRestRaceDtoConversor {
-
-    public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
 
     public static ObjectNode toObjectNode(RestRaceDto race) {
 
@@ -31,7 +25,7 @@ public class JsonToRestRaceDtoConversor {
         raceObject.put("maxParticipants", race.getMaxParticipants()).
                 put("description", race.getDescription()).
                 put("inscriptionPrice", race.getInscriptionPrice()).
-                put("raceDate", getRaceDate(race.getRaceDate())).
+                put("raceDate", race.getRaceDate()).
                 put("raceLocation", race.getRaceLocation()).
                 put("participants", race.getParticipants());
 
@@ -66,10 +60,10 @@ public class JsonToRestRaceDtoConversor {
                 int maxParticipants = raceObject.get("maxParticipants").asInt();
                 String description = raceObject.get("description").textValue().trim();
                 float inscriptionPrice = raceObject.get("price").floatValue();
-                String raceDateString = raceObject.get("raceDate").textValue().trim();
-                LocalDateTime raceDate = LocalDateTime.parse(raceDateString);
-                String raceLocation = raceObject.asText().trim();
-                int participants = raceObject.get("participants").asInt();
+                String raceDate = raceObject.get("raceDate").textValue().trim();
+                String raceLocation = raceObject.get("city").textValue().trim();
+                JsonNode participantsNode = raceObject.get("participants");
+                int participants = (participantsNode != null) ? participantsNode.asInt() : 0;
                 return new RestRaceDto(raceId, maxParticipants, description, inscriptionPrice,
                         raceDate, raceLocation, participants);
             }
@@ -78,11 +72,5 @@ public class JsonToRestRaceDtoConversor {
         } catch (Exception e) {
             throw new ParsingException(e);
         }
-    }
-
-    private static String getRaceDate(LocalDateTime raceDate) {
-
-        return sdf.format(raceDate);
-
     }
 }

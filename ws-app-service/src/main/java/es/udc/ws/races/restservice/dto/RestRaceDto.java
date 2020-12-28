@@ -8,7 +8,7 @@ public class RestRaceDto {
     private int maxParticipants;
     private String description;
     private float inscriptionPrice;
-    private LocalDateTime raceDate;
+    private String raceDate;
     private String raceLocation;
     private int participants;
 
@@ -17,7 +17,7 @@ public class RestRaceDto {
     }
 
     public RestRaceDto(int maxParticipants, String description, float inscriptionPrice,
-                       LocalDateTime raceDate, String raceLocation) {
+                       String raceDate, String raceLocation) {
         this.maxParticipants = maxParticipants;
         this.description = description;
         this.inscriptionPrice = inscriptionPrice;
@@ -25,7 +25,7 @@ public class RestRaceDto {
         this.raceLocation = raceLocation;
     }
     public RestRaceDto(Long raceId , int maxParticipants, String description, float inscriptionPrice,
-                       LocalDateTime raceDate, String raceLocation, int participants){
+                       String raceDate, String raceLocation, int participants){
         this(maxParticipants, description, inscriptionPrice, raceDate, raceLocation);
         this.raceId = raceId;
         this.participants = participants;
@@ -64,11 +64,11 @@ public class RestRaceDto {
         this.inscriptionPrice = inscriptionPrice;
     }
 
-    public LocalDateTime getRaceDate() {
+    public String getRaceDate() {
         return raceDate;
     }
 
-    public void setRentDate(LocalDateTime rentDate) {
+    public void setRentDate(String rentDate) {
         this.raceDate = raceDate;
     }
 
