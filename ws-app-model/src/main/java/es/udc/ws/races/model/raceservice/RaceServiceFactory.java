@@ -15,7 +15,7 @@ public class RaceServiceFactory {
             String serviceClassName = ConfigurationParametersManager.getParameter(CLASS_NAME_PARAMETER);
             System.out.println(serviceClassName);
             Class serviceClass = Class.forName(serviceClassName);
-            return (RaceService) serviceClass.newInstance();
+            return (RaceService) serviceClass.getDeclaredConstructor().newInstance();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

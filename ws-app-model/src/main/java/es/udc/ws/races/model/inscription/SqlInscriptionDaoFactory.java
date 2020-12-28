@@ -15,7 +15,7 @@ public class SqlInscriptionDaoFactory {
             String daoClassName = ConfigurationParametersManager.getParameter(CLASS_NAME_PARAMETER);
             System.out.println(daoClassName);
             Class daoClass = Class.forName(daoClassName);
-            return (SqlInscriptionDao) daoClass.newInstance();
+            return (SqlInscriptionDao) daoClass.getDeclaredConstructor().newInstance();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

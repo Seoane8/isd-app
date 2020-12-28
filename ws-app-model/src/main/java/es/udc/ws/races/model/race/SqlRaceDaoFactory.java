@@ -15,7 +15,7 @@ public class SqlRaceDaoFactory {
             String daoClassName = ConfigurationParametersManager.getParameter(CLASS_NAME_PARAMETER);
             System.out.println(daoClassName);
             Class daoClass = Class.forName(daoClassName);
-            return (SqlRaceDao) daoClass.newInstance();
+            return (SqlRaceDao) daoClass.getDeclaredConstructor().newInstance();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
