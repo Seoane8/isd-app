@@ -21,16 +21,6 @@ public class InscriptionsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = ServletUtils.normalizePath(req.getPathInfo());
         if (path == null || path.length() == 0){
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                    JsonToExceptionConversor.toInputValidationException(
-                            new InputValidationException("Invalid Request: invalid race id")),
-                    null);
-            return;
-        }
-
-        String[] pathList = path.split("[/]");
-
-        if(pathList.length == 1 && pathList[0].equals("new")){
 
             String raceID = req.getParameter("raceID");
             if(raceID == null){
@@ -99,8 +89,9 @@ public class InscriptionsServlet extends HttpServlet {
                     JsonNodeFactory.instance.objectNode().put("InscriptionID", inscriptionID),
                     null);
             return;
-
         }
+
+        String[] pathList = path.split("[/]");
 
         if(pathList.length != 3 || !pathList[2].equals("collect")){
             resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
