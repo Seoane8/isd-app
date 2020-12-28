@@ -48,7 +48,7 @@ public class RacesServlet extends HttpServlet {
         }
         Race race = RaceToRestRaceDtoConversor.toRace(raceDto);
         try {
-            race = RaceServiceFactory.getService().addRace(race.getDescription(),race.getInscriptionPrice(),race.getRaceDate(), race.getMaxParticipants(),race.getRaceLocation());
+            race = RaceServiceFactory.getService().addRace(race.getDescription(), race.getInscriptionPrice(), race.getRaceDate(), race.getMaxParticipants(), race.getRaceLocation());
         } catch (InputValidationException ex) {
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                     JsonToExceptionConversor.toInputValidationException(ex), null);
@@ -64,7 +64,7 @@ public class RacesServlet extends HttpServlet {
                 JsonToRestRaceDtoConversor.toObjectNode(raceDto), headers);
     }
 
-    @Override
+    /*@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = ServletUtils.normalizePath(req.getPathInfo());
         if (path == null || path.length() == 0) {
@@ -115,54 +115,63 @@ public class RacesServlet extends HttpServlet {
 					JsonServiceExceptionConversor.toInputValidationException(
 							new InputValidationException("Invalid Request: " + "invalid path " + path)),
 					null);
-		}*/
+		}
         }
-    }
-
-}
+    }*/
 
 
-
-    /*@Override
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
-        if (path == null || path.length() == 0){
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                    JsonToExceptionConversor.toInputValidationException(
-                            new InputValidationException("Invalid Request: invalid race id")),
-                    null);
-            return;
+        if (path == null || path.length() == 0) {
+            String city = req.getParameter("city");
+            String dateString;
+            List<Race> races = new ArrayList<>();
+            if (!((dateString = req.getParameter("city")) == (null))) {
+                LocalDate date = LocalDate.parse("2021-12-31");
+                date.from(LocalDate.parse(dateString));
+
+                try {
+                    races = RaceServiceFactory.getService().findRaces(date, city);
+                } catch (InputValidationException e) {
+                    e.printStackTrace();
+                }
+
+                List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                        JsonToRestRaceDtoConversor.toArrayNode(raceDtos), null);
+            }
+
+            String raceIdString = path.substring(1);
+            Long raceId;
+
+            try {
+                raceId = Long.valueOf(raceIdString);
+            } catch (NumberFormatException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request: invalid race id '" + raceIdString + "'")),
+                        null);
+
+                return;
+            }
+
+            Race race;
+
+            try {
+                race = RaceServiceFactory.getService().findRace(raceId);
+            } catch (InstanceNotFoundException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toInstanceNotFoundException(e),
+                        null);
+                return;
+            }
+
+            RestRaceDto raceDto = RaceToRestRaceDtoConversor.toRaceDto(race);
+
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                    JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
         }
-
-        String raceIdString = path.substring(1);
-        Long raceId;
-
-        try {
-            raceId = Long.valueOf(raceIdString);
-        } catch (NumberFormatException e) {
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                    JsonToExceptionConversor.toInputValidationException(
-                            new InputValidationException("Invalid Request: invalid race id '" + raceIdString + "'")),
-                    null);
-
-            return;
-        }
-
-        Race race;
-
-        try {
-            race = RaceServiceFactory.getService().findRace(raceId);
-        } catch (InstanceNotFoundException e) {
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
-                    JsonToExceptionConversor.toInstanceNotFoundException(e),
-                    null);
-            return;
-        }
-
-        RestRaceDto raceDto = RaceToRestRaceDtoConversor.toRaceDto(race);
-
-        ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
-                JsonToRestRaceDtoConversor.toObjectNode(raceDto), null);
-    }*/
+    }
 }
