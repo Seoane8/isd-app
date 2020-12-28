@@ -3,11 +3,10 @@ package es.udc.ws.client.service.rest;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.udc.ws.client.service.ClientRaceService;
+import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
+import es.udc.ws.client.service.exceptions.*;
 import es.udc.ws.client.service.rest.json.JsonToClientRaceDtoConversor;
-import es.udc.ws.races.model.inscription.Inscription;
-import es.udc.ws.races.model.race.Race;
-import es.udc.ws.races.model.raceservice.exceptions.*;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
@@ -56,7 +55,8 @@ public class RestClientRaceService implements ClientRaceService {
 
     }
 
-    private void validateStatusCode(int successCode, HttpResponse response) throws Exception {
+    private void validateStatusCode(int successCode, HttpResponse response)
+            throws Exception {
 
         try {
 
@@ -94,7 +94,8 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Long addRace(ClientRaceDto race) throws InputValidationException {
+    public Long addRace(ClientRaceDto race)
+            throws InputValidationException {
         try {
 
             HttpResponse response = Request.Post(getEndpointAddress() + "races").
@@ -113,12 +114,14 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Race findRace(Long raceID) throws InstanceNotFoundException {
+    public ClientRaceDto findRace(Long raceID)
+            throws InstanceNotFoundException {
         return null;
     }
 
     @Override
-    public List<ClientRaceDto> findRaces(LocalDate date, String city) throws InputValidationException {
+    public List<ClientRaceDto> findRaces(LocalDate date, String city)
+            throws InputValidationException {
         try {
 
             HttpResponse response = Request.Get(getEndpointAddress() + "bikes/?keywords="
@@ -138,17 +141,22 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Long addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
+    public Long addInscription(Long raceId, String mail, String creditCard)
+            throws InputValidationException, InstanceNotFoundException, ClientNoMoreInscriptionsAllowedException,
+            ClientInscriptionDateExpiredException, ClientAlreadyInscriptedException {
         return null;
     }
 
     @Override
-    public List<Inscription> findInscriptions(String mail) throws InputValidationException {
+    public List<ClientInscriptionDto> findInscriptions(String mail)
+            throws InputValidationException {
         return null;
     }
 
     @Override
-    public int collectDorsal(String creditCard, Long inscriptionId) throws InputValidationException, InstanceNotFoundException, AlreadyCollectedException, IncorrectCreditCardException {
+    public int collectDorsal(String creditCard, Long inscriptionId)
+            throws InputValidationException, InstanceNotFoundException,
+            ClientAlreadyCollectedException, ClientIncorrectCreditCardException {
         return 0;
     }
 }
