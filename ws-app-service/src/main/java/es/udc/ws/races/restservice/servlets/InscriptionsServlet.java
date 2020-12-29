@@ -1,10 +1,13 @@
 package es.udc.ws.races.restservice.servlets;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import es.udc.ws.races.model.inscription.Inscription;
 import es.udc.ws.races.model.raceservice.RaceServiceFactory;
-import es.udc.ws.races.model.raceservice.exceptions.AlreadyCollectedException;
-import es.udc.ws.races.model.raceservice.exceptions.IncorrectCreditCardException;
+import es.udc.ws.races.model.raceservice.exceptions.*;
+import es.udc.ws.races.restservice.dto.InscriptionToRestInscriptionDtoConversor;
+import es.udc.ws.races.restservice.dto.RestInscriptionDto;
 import es.udc.ws.races.restservice.json.JsonToExceptionConversor;
+import es.udc.ws.races.restservice.json.JsonToRestInsciptionDtoConversor;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.servlet.ServletUtils;
@@ -14,7 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.regex.Matcher;
+import java.util.List;
 
 public class InscriptionsServlet extends HttpServlet {
 
@@ -22,9 +25,72 @@ public class InscriptionsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = ServletUtils.normalizePath(req.getPathInfo());
         if (path == null || path.length() == 0){
-            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                    JsonToExceptionConversor.toInputValidationException(
-                            new InputValidationException("Invalid Request: invalid race id")),
+
+            String raceId = req.getParameter("race");
+            if(raceId == null){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request: parameter 'raceId' is required")),
+                        null);
+                return;
+            }
+
+            String mail = req.getParameter("mail");
+            if(mail == null){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request: parameter 'mail' is required")),
+                        null);
+                return;
+            }
+
+            String creditCard = req.getParameter("creditCard");
+            if(creditCard == null){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request: parameter 'creditCard' is required")),
+                        null);
+                return;
+            }
+
+            long inscriptionID;
+
+            try{
+                inscriptionID = RaceServiceFactory.getService().addInscription(Long.parseLong(raceId),mail,creditCard);
+            }
+            catch (InstanceNotFoundException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toInstanceNotFoundException(e),
+                        null);
+                return;
+            }
+            catch (InputValidationException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toInputValidationException(e),
+                        null);
+                return;
+            }
+            catch (NoMoreInscriptionsAllowedException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toNoMoreInscriptionsAllowedException(e),
+                        null);
+                return;
+            }
+            catch (InscriptionDateExpiredException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toInscriptionDateExpiredException(e),
+                        null);
+                return;
+            }
+
+            catch (AlreadyInscriptedException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                        JsonToExceptionConversor.toAlreadyInscriptedException(e),
+                        null);
+                return;
+            }
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                    JsonNodeFactory.instance.objectNode().put("InscriptionID", inscriptionID),
                     null);
             return;
         }
@@ -90,5 +156,47 @@ public class InscriptionsServlet extends HttpServlet {
         ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
             JsonNodeFactory.instance.objectNode().put("dorsal", dorsal),
             null);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = ServletUtils.normalizePath(req.getPathInfo());
+
+        if (path == null || path.length() == 0) {
+
+            String mail = req.getParameter("mail");
+
+            if(mail == null){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request: parameter 'mail' is required")),
+                        null);
+
+                return;
+            }
+
+            List<Inscription> inscriptions;
+
+            try{
+             inscriptions = RaceServiceFactory.getService().findInscriptions(mail);
+            }
+            catch(InputValidationException e){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(e),
+                        null);
+                return;
+            }
+            List<RestInscriptionDto> inscriptionsDtos =
+                    InscriptionToRestInscriptionDtoConversor.toInscriptionDtos(inscriptions);
+
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                    JsonToRestInsciptionDtoConversor.toArrayJsonObject(inscriptionsDtos),null);
+
+        }else{
+            ServletUtils.writeServiceResponse(resp,
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    JsonToExceptionConversor.toInputValidationException(
+                            new InputValidationException("Invalid request: invalid path " + path)), null);
+        }
     }
 }

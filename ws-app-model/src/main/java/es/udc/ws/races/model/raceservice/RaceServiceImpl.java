@@ -96,16 +96,16 @@ public class RaceServiceImpl implements RaceService{
                 Race race = findRace(raceId);
                 if(race.getRaceDate().minusDays(1).isBefore(LocalDateTime.now())){
                     connection.rollback();
-                    throw new InscriptionDateExpiredException();
+                    throw new InscriptionDateExpiredException(raceId,race.getRaceDate());
                 }
                 if(race.getParticipants() >= race.getMaxParticipants()){
                     connection.rollback();
-                    throw new NoMoreInscriptionsAllowedException();
+                    throw new NoMoreInscriptionsAllowedException(raceId);
                 }
 
                 if(inscriptionDao.isInscripted(connection,raceId,mail)){
                     connection.rollback();
-                    throw new AlreadyInscriptedException();
+                    throw new AlreadyInscriptedException(raceId,mail);
                 }
 
                 Inscription inscription = new Inscription(raceId,mail,creditCard,LocalDateTime.now(),

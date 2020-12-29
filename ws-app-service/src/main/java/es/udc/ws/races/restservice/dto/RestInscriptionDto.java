@@ -8,14 +8,15 @@ public class RestInscriptionDto {
     private long raceID;
     private String mail;
     private String credCardNumber;
-    private LocalDateTime reservationDate;
+    private String reservationDate;
     private int dorsal;
     private boolean dorsalCollected;
     private float price;
 
     public RestInscriptionDto(){}
 
-    public RestInscriptionDto(long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
+    public RestInscriptionDto(long raceID, String mail, String credCardNumber, String reservationDate ,
+                              int dorsal, boolean dorsalCollected, float price) {
         this.raceID = raceID;
         this.mail = mail;
         this.credCardNumber = credCardNumber;
@@ -25,7 +26,8 @@ public class RestInscriptionDto {
         this.price = price;
     }
 
-    public RestInscriptionDto(long inscriptionId, long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
+    public RestInscriptionDto(long inscriptionId, long raceID, String mail, String credCardNumber,
+                              String reservationDate , int dorsal, boolean dorsalCollected, float price) {
         this(raceID, mail, credCardNumber, reservationDate ,dorsal, dorsalCollected, price);
         this.inscriptionId = inscriptionId;
     }
@@ -62,11 +64,11 @@ public class RestInscriptionDto {
         this.credCardNumber = credCardNumber;
     }
 
-    public LocalDateTime getReservationDate() {
+    public String getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(LocalDateTime reservationDate) {
+    public void setReservationDate(String reservationDate) {
         this.reservationDate = reservationDate;
     }
 

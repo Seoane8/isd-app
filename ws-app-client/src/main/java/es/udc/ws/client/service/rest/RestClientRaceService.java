@@ -1,19 +1,23 @@
 package es.udc.ws.client.service.rest;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import es.udc.ws.client.service.ClientRaceService;
+import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
+import es.udc.ws.client.service.exceptions.*;
+import es.udc.ws.client.service.rest.json.JsonToClientExceptionConversor;
 import es.udc.ws.client.service.rest.json.JsonToClientRaceDtoConversor;
-import es.udc.ws.races.model.inscription.Inscription;
-import es.udc.ws.races.model.race.Race;
-import es.udc.ws.races.model.raceservice.exceptions.*;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.json.ObjectMapperFactory;
+import es.udc.ws.util.json.exceptions.ParsingException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
@@ -56,7 +60,8 @@ public class RestClientRaceService implements ClientRaceService {
 
     }
 
-    private void validateStatusCode(int successCode, HttpResponse response) throws Exception {
+    private void validateStatusCode(int successCode, HttpResponse response)
+            throws Exception {
 
         try {
 
@@ -94,7 +99,8 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Long addRace(ClientRaceDto race) throws InputValidationException {
+    public Long addRace(ClientRaceDto race)
+            throws InputValidationException {
         try {
 
             HttpResponse response = Request.Post(getEndpointAddress() + "races").
@@ -113,12 +119,27 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Race findRace(Long raceID) throws InstanceNotFoundException {
-        return null;
+    public ClientRaceDto findRace(Long raceID)
+            throws InstanceNotFoundException {
+
+        try{
+
+            HttpResponse response = Request.Get(getEndpointAddress() + "races/" + raceID).execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            return JsonToClientRaceDtoConversor.toClientRaceDto(response.getEntity().getContent());
+
+        } catch (InstanceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<ClientRaceDto> findRaces(LocalDate date, String city) throws InputValidationException {
+    public List<ClientRaceDto> findRaces(LocalDate date, String city)
+            throws InputValidationException {
         try {
 
             HttpResponse response = Request.Get(getEndpointAddress() + "races/?city="
@@ -138,17 +159,42 @@ public class RestClientRaceService implements ClientRaceService {
     }
 
     @Override
-    public Long addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
+    public Long addInscription(Long raceId, String mail, String creditCard)
+            throws InputValidationException, InstanceNotFoundException, ClientNoMoreInscriptionsAllowedException,
+            ClientInscriptionDateExpiredException, ClientAlreadyInscriptedException {
         return null;
     }
 
     @Override
-    public List<Inscription> findInscriptions(String mail) throws InputValidationException {
+    public List<ClientInscriptionDto> findInscriptions(String mail)
+            throws InputValidationException {
         return null;
     }
 
     @Override
-    public int collectDorsal(String creditCard, Long inscriptionId) throws InputValidationException, InstanceNotFoundException, AlreadyCollectedException, IncorrectCreditCardException {
-        return 0;
+    public int collectDorsal(String creditCard, Long inscriptionId)
+            throws InputValidationException, InstanceNotFoundException,
+            ClientAlreadyCollectedException, ClientIncorrectCreditCardException {
+
+        try{
+
+            HttpResponse response = Request.Post(getEndpointAddress() + "inscriptions/" + inscriptionId + "/collect").
+                    bodyForm(Form.form().add("creditCardNumber", creditCard).build()).execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            ObjectMapper mapper = ObjectMapperFactory.instance();
+            JsonNode jsonMap = mapper.readTree(response.getEntity().getContent());
+            if (jsonMap.getNodeType() != JsonNodeType.OBJECT) {
+                throw new ParsingException("Unrecognized JSON (object expected)");
+            }
+            return jsonMap.get("dorsal").asInt();
+
+        } catch (InputValidationException | InstanceNotFoundException |
+                ClientAlreadyCollectedException | ClientIncorrectCreditCardException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

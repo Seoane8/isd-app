@@ -20,13 +20,15 @@ public class RaceToRestRaceDtoConversor {
     }
 
     public static RestRaceDto toRaceDto(Race race) {
-        return new RestRaceDto(race.getRaceId(), race.getMaxParticipants(), race.getDescription(),
-                race.getInscriptionPrice(), race.getRaceDate(),race.getRaceLocation(),race.getParticipants());
+        return new RestRaceDto(race.getRaceId(), race.getMaxParticipants(),
+                race.getDescription(), race.getInscriptionPrice(), race.getRaceDate().toString(),
+                race.getRaceLocation(),race.getParticipants());
     }
 
     public static Race toRace(RestRaceDto race) {
-        return new  Race(race.getRaceId(), race.getMaxParticipants(), race.getDescription(), race.getInscriptionPrice(),
-                race.getRaceDate(), race.getRaceLocation(), LocalDateTime.now().withNano(0) ,race.getParticipants());
+        return new  Race(race.getRaceId(), race.getMaxParticipants(), race.getDescription(),
+                race.getInscriptionPrice(), LocalDateTime.parse(race.getRaceDate()), race.getRaceLocation(),
+                LocalDateTime.now().withNano(0) ,race.getParticipants());
     }
 
 

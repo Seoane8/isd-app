@@ -20,9 +20,6 @@ import java.util.Locale;
 
 public class JsonToClientRaceDtoConversor {
 
-    public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
-
     public static ObjectNode toObjectNode(ClientRaceDto race) throws IOException {
 
         ObjectNode raceObject = JsonNodeFactory.instance.objectNode();
@@ -33,7 +30,7 @@ public class JsonToClientRaceDtoConversor {
         raceObject.put("maxParticipants", race.getMaxParticipants()).
                 put("description", race.getDescription()).
                 put("inscriptionPrice", race.getInscriptionPrice()).
-                put("raceDate", getRaceDate(race.getRaceDate())).
+                put("raceDate", race.getRaceDate().toString()).
                 put("raceLocation", race.getRaceLocation()).
                 put("participants", race.getParticipants());
 
@@ -94,20 +91,15 @@ public class JsonToClientRaceDtoConversor {
 
                 int maxParticipants = raceObject.get("maxParticipants").asInt();
                 String description = raceObject.get("description").textValue().trim();
-                float inscriptionPrice = raceObject.get("price").floatValue();
+                float inscriptionPrice = raceObject.get("inscriptionPrice").floatValue();
                 String raceDateString = raceObject.get("raceDate").textValue().trim();
                 LocalDateTime raceDate = LocalDateTime.parse(raceDateString);
-                String raceLocation = raceObject.asText().trim();
+                String raceLocation = raceObject.get("raceLocation").textValue().trim();
                 int participants = raceObject.get("participants").asInt();
                 return new ClientRaceDto(raceId, maxParticipants, description, inscriptionPrice,
                         raceDate, raceLocation, participants);
             }
 
-
-    }
-    private static String getRaceDate(LocalDateTime raceDate) {
-
-        return sdf.format(raceDate);
 
     }
 }

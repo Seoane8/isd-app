@@ -1,4 +1,4 @@
-package es.udc.ws.races.restservice.thriftservice;
+package es.udc.ws.races.thriftservice;
 
 import es.udc.ws.races.model.race.Race;
 

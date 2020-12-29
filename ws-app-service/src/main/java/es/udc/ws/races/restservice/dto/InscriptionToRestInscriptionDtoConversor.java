@@ -8,7 +8,8 @@ import java.util.List;
 public class InscriptionToRestInscriptionDtoConversor {
 
     public static RestInscriptionDto toInscriptionDto(Inscription inscription) {
-        return new RestInscriptionDto(inscription.getInscriptionId(),inscription.getRaceID(),inscription.getMail(), inscription.getCredCardNumber(), inscription.getReservationDate(), inscription.getDorsal(),
+        return new RestInscriptionDto(inscription.getInscriptionId(),inscription.getRaceID(),inscription.getMail(),
+                inscription.getCredCardNumber(), inscription.getReservationDate().toString(), inscription.getDorsal(),
                 inscription.isDorsalCollected(), inscription.getPrice());
     }
 

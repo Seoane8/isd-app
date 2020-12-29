@@ -1,10 +1,10 @@
-package es.udc.ws.races.model.raceservice.exceptions;
+package es.udc.ws.client.service.exceptions;
 
-public class NoMoreInscriptionsAllowedException extends Exception {
+public class ClientNoMoreInscriptionsAllowedException extends Exception {
 
     Long raceId;
 
-    public NoMoreInscriptionsAllowedException(Long raceId){
+    public ClientNoMoreInscriptionsAllowedException(Long raceId){
         super("No more inscriptions allowed in race" + raceId);
         this.raceId = raceId;
     }
