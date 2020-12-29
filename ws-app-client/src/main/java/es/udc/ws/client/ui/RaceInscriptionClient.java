@@ -3,9 +3,7 @@ package es.udc.ws.client.ui;
 import es.udc.ws.client.service.ClientRaceService;
 import es.udc.ws.client.service.ClientRaceServiceFactory;
 import es.udc.ws.client.service.dto.ClientRaceDto;
-import es.udc.ws.client.service.rest.RestClientRaceService;
 import es.udc.ws.util.exceptions.InputValidationException;
-import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -132,7 +130,7 @@ public class RaceInscriptionClient {
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                 }
-            }
+            } else printUsageAndExit();
 
         }
 
@@ -158,11 +156,11 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add] RaceInscriptionClient -a <maxParticipants> <description> <raceDate> <raceLocation> <participants>\n" +
-                 //   "    [remove] RaceInscriptionClient -r <movieId>\n" +
-              //      "    [update] RaceInscriptionClient -u <movieId> <title> <hours> <minutes> <description> <price>\n" +
-                    "    [find]   RaceInscriptionClient -f <city> <date>\n");
-              //      "    [buy]    RaceInscriptionClient -b <movieId> <userId> <creditCardNumber>\n" +
-               //     "    [get]    RaceInscriptionClient -g <saleId>\n");
+                    "    [add]              -a <maxParticipants> <description> <price> <date> <city> <participants>\n" +
+                    "    [findRace]         -findRace <raceId>\n" +
+                    "    [findRaces]        -f <date> <city>\n" +
+                    "    [addInscription]   ...\n" +
+                    "    [findInscriptions] ...\n" +
+                    "    [collectDorsal]    -collectDorsal <creditCard> <inscriptionId>\n");
         }
 }
