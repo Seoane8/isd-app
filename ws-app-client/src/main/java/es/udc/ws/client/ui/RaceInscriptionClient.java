@@ -59,26 +59,6 @@ public class RaceInscriptionClient {
                     System.err.println(ex.getMessage());
                 }
 
-           /* } else if("-u".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 7, new int[] {1, 3, 4, 6});
-
-                // [update] MovieServiceClient -u <movieId> <title> <hours> <minutes> <description> <price>
-
-                try {
-                    clientMovieService.updateMovie(new ClientMovieDto(
-                            Long.valueOf(args[1]),
-                            args[2], Short.valueOf(args[3]), Short.valueOf(args[4]),
-                            args[5], Float.valueOf(args[6])));
-
-                    System.out.println("Movie " + args[1] + " updated sucessfully");
-
-                } catch (NumberFormatException | InputValidationException |
-                        InstanceNotFoundException ex) {
-                    ex.printStackTrace(System.err);
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.err);
-                }*/
-
             } else if("-f".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 3, new int[] {});
 
@@ -138,6 +118,20 @@ public class RaceInscriptionClient {
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 } */
+
+            } else if("-collectDorsal".equalsIgnoreCase(args[0])) {
+                validateArgs(args, 3, new int[] {2});
+
+                // [collectDorsal] RaceInscriptionClient -collectDorsal <creditCard> <inscriptionId>
+
+                try {
+                    int dorsal = clientRaceService.collectDorsal(args[1], Long.parseLong(args[2]));
+
+                    System.out.println("The dorsal is: " + dorsal);
+
+                } catch (Exception ex) {
+                    System.err.println(ex.getMessage());
+                }
             }
 
         }
