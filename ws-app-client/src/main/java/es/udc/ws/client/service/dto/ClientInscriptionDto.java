@@ -8,22 +8,19 @@ public class ClientInscriptionDto {
     private long raceID;
     private String mail;
     private String credCardNumber;
-    private LocalDateTime reservationDate;
     private int dorsal;
     private boolean dorsalCollected;
-    private float price;
 
     public ClientInscriptionDto(){}
 
-    public ClientInscriptionDto(long inscriptionId,long raceID, String mail, String credCardNumber, LocalDateTime reservationDate , int dorsal, boolean dorsalCollected, float price) {
+    public ClientInscriptionDto(long inscriptionId,long raceID, String mail, String credCardNumber,
+                                int dorsal, boolean dorsalCollected) {
         this.inscriptionId = inscriptionId;
         this.raceID = raceID;
         this.mail = mail;
         this.credCardNumber = credCardNumber;
-        this.reservationDate = reservationDate;
         this.dorsal = dorsal;
         this.dorsalCollected = dorsalCollected;
-        this.price = price;
     }
 
 
@@ -60,14 +57,6 @@ public class ClientInscriptionDto {
         this.credCardNumber = credCardNumber;
     }
 
-    public LocalDateTime getReservationDate() {
-        return reservationDate;
-    }
-
-    public void setReservationDate(LocalDateTime reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
     public int getDorsal() {
         return dorsal;
     }
@@ -84,21 +73,11 @@ public class ClientInscriptionDto {
         this.dorsalCollected = dorsalCollected;
     }
 
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
     @Override
     public String toString() {
         return "InscriptionDto [inscriptionId=" + inscriptionId + ", raceId=" + raceID
                 + ", mail=" + mail + ",creditCardNumber=" + credCardNumber
-                + ",raceDate=" + reservationDate
                 + ", dorsal=" + dorsal
-                + ", price=" + price
                 + "]";
 
     }
