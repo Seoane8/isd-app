@@ -68,13 +68,15 @@ public class RacesServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
         if (path == null || path.length() == 0) {
+           if (req.getParameter("city")==null || req.getParameter("date")==null) throw new NullPointerException("");
             String city = req.getParameter("city");
             String dateString;
             List<Race> races = new ArrayList<>();
+
             if (!((dateString = req.getParameter("date")) == (null))) {
-                    LocalDateTime date = LocalDateTime.parse(dateString);
+                    LocalDate date = LocalDate.parse(dateString);
                 try {
-                    races = RaceServiceFactory.getService().findRaces(date.toLocalDate(), city);
+                    races = RaceServiceFactory.getService().findRaces(date, city);
                 } catch (InputValidationException e) {
                     e.printStackTrace();
                 }
