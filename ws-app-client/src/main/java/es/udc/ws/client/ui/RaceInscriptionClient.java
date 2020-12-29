@@ -2,9 +2,13 @@ package es.udc.ws.client.ui;
 
 import es.udc.ws.client.service.ClientRaceService;
 import es.udc.ws.client.service.ClientRaceServiceFactory;
+import es.udc.ws.client.service.dto.ClientRaceDto;
+import es.udc.ws.client.service.rest.RestClientRaceService;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RaceInscriptionClient {
@@ -17,16 +21,17 @@ public class RaceInscriptionClient {
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
             if("-a".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 6, new int[] {2, 3, 5});
+                validateArgs(args, 7, new int[] {2, 3, 5});
 
-                // [add] MovieServiceClient -a <title> <hours> <minutes> <description> <price>
+                // [add] RaceInscriptionClient -a <maxParticipants> <description> <minutes> <description> <price>
 
                 try {
-                    Long movieId = clientMovieService.addMovie(new ClientMovieDto(null,
-                            args[1], Short.valueOf(args[2]), Short.valueOf(args[3]),
-                            args[4], Float.valueOf(args[5])));
+                    Long raceId = clientRaceService.addRace(new ClientRaceDto(null,
+                            Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),
+                            LocalDateTime.parse(args[4]), args[5], Integer.valueOf(args[6])));
 
-                    System.out.println("Movie " + movieId + " created sucessfully");
+
+                    System.out.println("Race " + raceId + " created sucessfully");
 
                 } catch (NumberFormatException | InputValidationException ex) {
                     ex.printStackTrace(System.err);
@@ -34,13 +39,13 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 }
 
-            } else if("-r".equalsIgnoreCase(args[0])) {
+          /*  } else if("-r".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 2, new int[] {1});
 
                 // [remove] MovieServiceClient -r <movieId>
 
                 try {
-                    clientMovieService.removeMovie(Long.parseLong(args[1]));
+                    clientRaceService.removeRace(Long.parseLong(args[1]));
 
                     System.out.println("Movie with id " + args[1] +
                             " removed sucessfully");
@@ -49,9 +54,9 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
-                }
+                }*/
 
-            } else if("-u".equalsIgnoreCase(args[0])) {
+           /* } else if("-u".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 7, new int[] {1, 3, 4, 6});
 
                 // [update] MovieServiceClient -u <movieId> <title> <hours> <minutes> <description> <price>
@@ -69,31 +74,31 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
-                }
+                }*/
 
             } else if("-f".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 2, new int[] {});
 
-                // [find] MovieServiceClient -f <keywords>
+                // [findRaces] RaceInscriptionClient -f <city> <date>
 
                 try {
-                    List<ClientMovieDto> movies = clientMovieService.findMovies(args[1]);
-                    System.out.println("Found " + movies.size() +
-                            " movie(s) with keywords '" + args[1] + "'");
-                    for (int i = 0; i < movies.size(); i++) {
-                        ClientMovieDto movieDto = movies.get(i);
-                        System.out.println("Id: " + movieDto.getMovieId() +
-                                ", Title: " + movieDto.getTitle() +
-                                ", Runtime: " + (movieDto.getRuntimeHours() + " h - ") +
-                                (movieDto.getRuntimeMinutes() + " m") +
-                                ", Description: " + movieDto.getDescription() +
-                                ", Price: " + movieDto.getPrice());
+                    List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
+                    System.out.println("Found " + races.size() +
+                            " races(s) before " + args[1] + "and in " + args[2]);
+                    for (int i = 0; i < races.size(); i++) {
+                        ClientRaceDto raceDto = races.get(i);
+                        System.out.println("Id: " + raceDto.getRaceId() +
+                                ", Description: " + raceDto.getDescription() +
+                                ", participants: " + raceDto.getParticipants() +
+                                ", Description: " + raceDto.getDescription() +
+                                ", Location: " + raceDto.getRaceLocation() +
+                                ", Price: " + raceDto.getInscriptionPrice());
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
 
-            } else if("-b".equalsIgnoreCase(args[0])) {
+            /*} else if("-b".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 4, new int[] {1});
 
                 // [buy] MovieServiceClient -b <movieId> <userId> <creditCardNumber>
@@ -129,7 +134,7 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
-                }
+                } */
             }
 
         }
@@ -156,11 +161,11 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add]    MovieServiceClient -a <title> <hours> <minutes> <description> <price>\n" +
-                    "    [remove] MovieServiceClient -r <movieId>\n" +
-                    "    [update] MovieServiceClient -u <movieId> <title> <hours> <minutes> <description> <price>\n" +
-                    "    [find]   MovieServiceClient -f <keywords>\n" +
-                    "    [buy]    MovieServiceClient -b <movieId> <userId> <creditCardNumber>\n" +
-                    "    [get]    MovieServiceClient -g <saleId>\n");
+                    "    [add] RaceInscriptionClient -a <maxParticipants> <description> <minutes> <description> <price>\n" +
+                 //   "    [remove] RaceInscriptionClient -r <movieId>\n" +
+              //      "    [update] RaceInscriptionClient -u <movieId> <title> <hours> <minutes> <description> <price>\n" +
+                    "    [find]   RaceInscriptionClient -f <raceId>\n");
+              //      "    [buy]    RaceInscriptionClient -b <movieId> <userId> <creditCardNumber>\n" +
+               //     "    [get]    RaceInscriptionClient -g <saleId>\n");
         }
 }
