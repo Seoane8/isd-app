@@ -9,6 +9,7 @@ import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
 import es.udc.ws.client.service.exceptions.*;
 import es.udc.ws.client.service.rest.json.JsonToClientExceptionConversor;
+import es.udc.ws.client.service.rest.json.JsonToClientInscriptionDtoConversor;
 import es.udc.ws.client.service.rest.json.JsonToClientRaceDtoConversor;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import es.udc.ws.util.exceptions.InputValidationException;
@@ -162,13 +163,44 @@ public class RestClientRaceService implements ClientRaceService {
     public Long addInscription(Long raceId, String mail, String creditCard)
             throws InputValidationException, InstanceNotFoundException, ClientNoMoreInscriptionsAllowedException,
             ClientInscriptionDateExpiredException, ClientAlreadyInscriptedException {
-        return null;
+
+            try{
+                HttpResponse response =
+                    Request.Post(getEndpointAddress() + "inscriptions").
+                            bodyForm(Form.form().
+                                    add("race", Long.toString(raceId)).
+                                    add("mail", mail).
+                                    add("creditCard", creditCard).
+                                    build()).
+                            execute().returnResponse();
+
+                validateStatusCode(HttpStatus.SC_CREATED, response);
+
+                return JsonToClientInscriptionDtoConversor.toClientInscriptionDto(
+                        response.getEntity().getContent()).getInscriptionId();
+            } catch (InputValidationException | InstanceNotFoundException | ClientNoMoreInscriptionsAllowedException |
+        ClientInscriptionDateExpiredException | ClientAlreadyInscriptedException e){
+                throw e;
+            } catch (Exception e){
+                throw new RuntimeException(e);
+            }
     }
 
     @Override
     public List<ClientInscriptionDto> findInscriptions(String mail)
             throws InputValidationException {
-        return null;
+        try{
+            HttpResponse response =
+                    Request.Get(getEndpointAddress() + "inscriptions?mail="
+                            + URLEncoder.encode(mail, "UTF-8")).
+                            execute().returnResponse();
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            return JsonToClientInscriptionDtoConversor.toClientInscriptionDtos(
+                    response.getEntity().getContent());
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
