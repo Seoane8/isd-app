@@ -21,14 +21,14 @@ public class RaceInscriptionClient {
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
             if("-a".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 7, new int[] {2, 3, 5});
+              //  validateArgs(args, 6, new int[] {2, 3, 5});
 
-                // [add] RaceInscriptionClient -a <maxParticipants> <description> <minutes> <description> <price>
+                // [add] RaceInscriptionClient -a <maxParticipants> <description> <raceDate> <raceLocation> <participants>
 
                 try {
                     Long raceId = clientRaceService.addRace(new ClientRaceDto(null,
-                            Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),
-                            LocalDateTime.parse(args[4]), args[5], Integer.valueOf(args[6])));
+                            Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),LocalDateTime.parse(args[4])
+                            , args[5], Integer.valueOf(args[6])));
 
 
                     System.out.println("Race " + raceId + " created sucessfully");
@@ -161,7 +161,7 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add] RaceInscriptionClient -a <maxParticipants> <description> <minutes> <description> <price>\n" +
+                    "    [add] RaceInscriptionClient -a <maxParticipants> <description> <raceDate> <raceLocation> <participants>\n" +
                  //   "    [remove] RaceInscriptionClient -r <movieId>\n" +
               //      "    [update] RaceInscriptionClient -u <movieId> <title> <hours> <minutes> <description> <price>\n" +
                     "    [find]   RaceInscriptionClient -f <raceId>\n");

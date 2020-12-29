@@ -16,8 +16,9 @@ public class ClientRaceDto {
     public ClientRaceDto() {
     }
 
-    public ClientRaceDto(long raceId,int maxParticipants, String description, float inscriptionPrice,
+    public ClientRaceDto(Long raceId,int maxParticipants, String description, float inscriptionPrice,
                        LocalDateTime raceDate, String raceLocation, int participants) {
+
         this.raceId = raceId;
         this.maxParticipants = maxParticipants;
         this.description = description;
