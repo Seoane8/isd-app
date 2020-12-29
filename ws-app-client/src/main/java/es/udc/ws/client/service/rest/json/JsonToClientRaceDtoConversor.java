@@ -10,17 +10,14 @@ import es.udc.ws.client.service.dto.ClientRaceDto;
 import es.udc.ws.util.json.ObjectMapperFactory;
 import es.udc.ws.util.json.exceptions.ParsingException;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class JsonToClientRaceDtoConversor {
 
-    public static ObjectNode toObjectNode(ClientRaceDto race) throws IOException {
+    public static ObjectNode toObjectNode(ClientRaceDto race){
 
         ObjectNode raceObject = JsonNodeFactory.instance.objectNode();
 
@@ -39,11 +36,11 @@ public class JsonToClientRaceDtoConversor {
     }
 
 
-    public static ClientRaceDto toClientRaceDto(InputStream jsonMovie) throws ParsingException {
+    public static ClientRaceDto toClientRaceDto(InputStream json) throws ParsingException {
         try {
 
             ObjectMapper objectMapper = ObjectMapperFactory.instance();
-            JsonNode rootNode = objectMapper.readTree(jsonMovie);
+            JsonNode rootNode = objectMapper.readTree(json);
             if (rootNode.getNodeType() != JsonNodeType.OBJECT) {
                 throw new ParsingException("Unrecognized JSON (object expected)");
             } else {
@@ -56,11 +53,11 @@ public class JsonToClientRaceDtoConversor {
         }
     }
 
-    public static List<ClientRaceDto> toClientRaceDtos(InputStream jsonRaces) throws ParsingException {
+    public static List<ClientRaceDto> toClientRaceDtos(InputStream json) throws ParsingException {
         try {
 
             ObjectMapper objectMapper = ObjectMapperFactory.instance();
-            JsonNode rootNode = objectMapper.readTree(jsonRaces);
+            JsonNode rootNode = objectMapper.readTree(json);
             if (rootNode.getNodeType() != JsonNodeType.ARRAY) {
                 throw new ParsingException("Unrecognized JSON (array expected)");
             } else {
@@ -79,23 +76,23 @@ public class JsonToClientRaceDtoConversor {
         }
     }
 
-    private static ClientRaceDto toClientRaceDto(JsonNode raceNode) throws ParsingException {
+    private static ClientRaceDto toClientRaceDto(JsonNode node) throws ParsingException {
 
-            if (raceNode.getNodeType() != JsonNodeType.OBJECT) {
+            if (node.getNodeType() != JsonNodeType.OBJECT) {
                 throw new ParsingException("Unrecognized JSON (object expected)");
             } else {
-                ObjectNode raceObject = (ObjectNode) raceNode;
+                ObjectNode object = (ObjectNode) node;
 
-                JsonNode raceIdNode = raceObject.get("raceId");
+                JsonNode raceIdNode = object.get("raceId");
                 Long raceId = (raceIdNode != null) ? raceIdNode.longValue() : null;
 
-                int maxParticipants = raceObject.get("maxParticipants").asInt();
-                String description = raceObject.get("description").textValue().trim();
-                float inscriptionPrice = raceObject.get("inscriptionPrice").floatValue();
-                String raceDateString = raceObject.get("raceDate").textValue().trim();
+                int maxParticipants = object.get("maxParticipants").asInt();
+                String description = object.get("description").textValue().trim();
+                float inscriptionPrice = object.get("inscriptionPrice").floatValue();
+                String raceDateString = object.get("raceDate").textValue().trim();
                 LocalDateTime raceDate = LocalDateTime.parse(raceDateString);
-                String raceLocation = raceObject.get("raceLocation").textValue().trim();
-                int participants = raceObject.get("participants").asInt();
+                String raceLocation = object.get("raceLocation").textValue().trim();
+                int participants = object.get("participants").asInt();
                 return new ClientRaceDto(raceId, maxParticipants, description, inscriptionPrice,
                         raceDate, raceLocation, participants);
             }
