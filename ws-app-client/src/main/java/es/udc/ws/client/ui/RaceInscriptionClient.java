@@ -41,22 +41,23 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 }
 
-          /*  } else if("-r".equalsIgnoreCase(args[0])) {
+            } else if("-findRace".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 2, new int[] {1});
 
-                // [remove] MovieServiceClient -r <movieId>
+                // [findRace] RaceInscriptionClient -findRace <movieId>
 
                 try {
-                    clientRaceService.removeRace(Long.parseLong(args[1]));
+                    ClientRaceDto race = clientRaceService.findRace(Long.parseLong(args[1]));
 
-                    System.out.println("Movie with id " + args[1] +
-                            " removed sucessfully");
+                    System.out.println("Race with ID: " + race.getRaceId() + "\n" +
+                                        "Location: " + race.getRaceLocation() + "\n" +
+                                        "Description: " + race.getDescription() + "\n" +
+                                        "Places: " + race.getAvailablePlaces() + "\n" +
+                                        "Price: " + race.getInscriptionPrice());
 
-                } catch (NumberFormatException | InstanceNotFoundException ex) {
-                    ex.printStackTrace(System.err);
                 } catch (Exception ex) {
-                    ex.printStackTrace(System.err);
-                }*/
+                    System.err.println(ex.getMessage());
+                }
 
            /* } else if("-u".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 7, new int[] {1, 3, 4, 6});

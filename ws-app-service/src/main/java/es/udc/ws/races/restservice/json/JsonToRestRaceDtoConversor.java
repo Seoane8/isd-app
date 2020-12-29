@@ -59,9 +59,9 @@ public class JsonToRestRaceDtoConversor {
 
                 int maxParticipants = raceObject.get("maxParticipants").asInt();
                 String description = raceObject.get("description").textValue().trim();
-                float inscriptionPrice = raceObject.get("price").floatValue();
+                float inscriptionPrice = raceObject.get("inscriptionPrice").floatValue();
                 String raceDate = raceObject.get("raceDate").textValue().trim();
-                String raceLocation = raceObject.get("city").textValue().trim();
+                String raceLocation = raceObject.get("raceLocation").textValue().trim();
                 JsonNode participantsNode = raceObject.get("participants");
                 int participants = (participantsNode != null) ? participantsNode.asInt() : 0;
                 return new RestRaceDto(raceId, maxParticipants, description, inscriptionPrice,
