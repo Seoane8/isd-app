@@ -21,14 +21,16 @@ public class RaceInscriptionClient {
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
             if("-a".equalsIgnoreCase(args[0])) {
-              //  validateArgs(args, 6, new int[] {2, 3, 5});
+              validateArgs(args, 7, new int[] { 1, 3, 6});
 
-                // [add] RaceInscriptionClient -a <maxParticipants> <description> <raceDate> <raceLocation> <participants>
+                // [add] RaceInscriptionClient -a <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
 
                 try {
-                    Long raceId = clientRaceService.addRace(new ClientRaceDto(null,
+                    ClientRaceDto client = new ClientRaceDto(null,
                             Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),LocalDateTime.parse(args[4])
-                            , args[5], Integer.valueOf(args[6])));
+                            , args[5], Integer.valueOf(args[6]));
+
+                    Long raceId = clientRaceService.addRace(client);
 
 
                     System.out.println("Race " + raceId + " created sucessfully");
@@ -78,9 +80,9 @@ public class RaceInscriptionClient {
                 }*/
 
             } else if("-f".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {});
+                validateArgs(args, 3, new int[] {});
 
-                // [findRaces] RaceInscriptionClient -f <city> <date>
+                // [findRaces] RaceInscriptionClient -f <date> <city>
 
                 try {
                     List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
@@ -165,7 +167,7 @@ public class RaceInscriptionClient {
                     "    [add] RaceInscriptionClient -a <maxParticipants> <description> <raceDate> <raceLocation> <participants>\n" +
                  //   "    [remove] RaceInscriptionClient -r <movieId>\n" +
               //      "    [update] RaceInscriptionClient -u <movieId> <title> <hours> <minutes> <description> <price>\n" +
-                    "    [find]   RaceInscriptionClient -f <raceId>\n");
+                    "    [find]   RaceInscriptionClient -f <city> <date>\n");
               //      "    [buy]    RaceInscriptionClient -b <movieId> <userId> <creditCardNumber>\n" +
                //     "    [get]    RaceInscriptionClient -g <saleId>\n");
         }
