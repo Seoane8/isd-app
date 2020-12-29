@@ -13,12 +13,14 @@ import es.udc.ws.util.json.exceptions.ParsingException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
 public class JsonToRestRaceDtoConversor {
 
     public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
+   // public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
     public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
 
     public static ObjectNode toObjectNode(RestRaceDto race) {

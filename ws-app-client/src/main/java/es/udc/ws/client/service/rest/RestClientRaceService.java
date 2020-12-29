@@ -121,7 +121,7 @@ public class RestClientRaceService implements ClientRaceService {
     public List<ClientRaceDto> findRaces(LocalDate date, String city) throws InputValidationException {
         try {
 
-            HttpResponse response = Request.Get(getEndpointAddress() + "bikes/?keywords="
+            HttpResponse response = Request.Get(getEndpointAddress() + "races/?city="
                     + URLEncoder.encode(city, "UTF-8") + "&date=" + URLEncoder.encode(date.toString(),"UTF-8")).
                     execute().returnResponse();
 

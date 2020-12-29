@@ -25,8 +25,8 @@ import java.util.*;
 
 public class RacesServlet extends HttpServlet {
 
-    public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
+    //public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
+   // public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -128,10 +128,8 @@ public class RacesServlet extends HttpServlet {
             String city = req.getParameter("city");
             String dateString;
             List<Race> races = new ArrayList<>();
-            if (!((dateString = req.getParameter("city")) == (null))) {
-                LocalDate date = LocalDate.parse("2021-12-31");
-                date.from(LocalDate.parse(dateString));
-
+            if (!((dateString = req.getParameter("date")) == (null))) {
+                    LocalDate date = LocalDate.parse(dateString);
                 try {
                     races = RaceServiceFactory.getService().findRaces(date, city);
                 } catch (InputValidationException e) {
