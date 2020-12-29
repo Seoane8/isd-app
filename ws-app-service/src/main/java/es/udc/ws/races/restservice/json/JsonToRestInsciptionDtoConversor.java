@@ -28,10 +28,8 @@ public class JsonToRestInsciptionDtoConversor {
             inscriptionNode.put("raceId", inscription.getRaceID()).
                     put("mail", inscription.getMail()).
                     put("creditCardNumber", inscription.getCredCardNumber()).
-                    put("price", inscription.getPrice()).
                     put("dorsal", inscription.getDorsal()).
-                    put("dosalCollected", inscription.isDorsalCollected()).
-                    put("reservationDate", inscription.getReservationDate());
+                    put("dosalCollected", inscription.isDorsalCollected());
 
             return inscriptionNode;
         }
