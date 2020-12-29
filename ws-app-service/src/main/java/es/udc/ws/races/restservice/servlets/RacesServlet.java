@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class RacesServlet extends HttpServlet {
@@ -71,9 +72,9 @@ public class RacesServlet extends HttpServlet {
             String dateString;
             List<Race> races = new ArrayList<>();
             if (!((dateString = req.getParameter("date")) == (null))) {
-                    LocalDate date = LocalDate.parse(dateString);
+                    LocalDateTime date = LocalDateTime.parse(dateString);
                 try {
-                    races = RaceServiceFactory.getService().findRaces(date, city);
+                    races = RaceServiceFactory.getService().findRaces(date.toLocalDate(), city);
                 } catch (InputValidationException e) {
                     e.printStackTrace();
                 }
