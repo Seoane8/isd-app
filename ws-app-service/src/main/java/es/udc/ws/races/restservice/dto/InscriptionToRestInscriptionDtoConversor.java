@@ -9,8 +9,8 @@ public class InscriptionToRestInscriptionDtoConversor {
 
     public static RestInscriptionDto toInscriptionDto(Inscription inscription) {
         return new RestInscriptionDto(inscription.getInscriptionId(),inscription.getRaceID(),inscription.getMail(),
-                inscription.getCredCardNumber(), inscription.getReservationDate().toString(), inscription.getDorsal(),
-                inscription.isDorsalCollected(), inscription.getPrice());
+                inscription.getCredCardNumber(), inscription.getDorsal(),
+                inscription.isDorsalCollected());
     }
 
     public static List<RestInscriptionDto> toInscriptionDtos(List<Inscription> inscriptions){
