@@ -176,8 +176,13 @@ public class RestClientRaceService implements ClientRaceService {
 
                 validateStatusCode(HttpStatus.SC_CREATED, response);
 
-                return JsonToClientInscriptionDtoConversor.toClientInscriptionDto(
-                        response.getEntity().getContent()).getInscriptionId();
+                ObjectMapper mapper = ObjectMapperFactory.instance();
+                JsonNode jsonMap = mapper.readTree(response.getEntity().getContent());
+                if (jsonMap.getNodeType() != JsonNodeType.OBJECT) {
+                    throw new ParsingException("Unrecognized JSON (object expected)");
+                }
+                return jsonMap.get("inscriptionID").asLong();
+
             } catch (InputValidationException | InstanceNotFoundException | ClientNoMoreInscriptionsAllowedException |
         ClientInscriptionDateExpiredException | ClientAlreadyInscriptedException e){
                 throw e;
