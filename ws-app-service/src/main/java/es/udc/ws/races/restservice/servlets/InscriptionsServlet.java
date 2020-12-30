@@ -65,32 +65,32 @@ public class InscriptionsServlet extends HttpServlet {
                 return;
             }
             catch (InputValidationException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toInputValidationException(e),
                         null);
                 return;
             }
             catch (NoMoreInscriptionsAllowedException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toNoMoreInscriptionsAllowedException(e),
                         null);
                 return;
             }
             catch (InscriptionDateExpiredException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toInscriptionDateExpiredException(e),
                         null);
                 return;
             }
 
             catch (AlreadyInscriptedException e) {
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toAlreadyInscriptedException(e),
                         null);
                 return;
             }
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_CREATED,
-                    JsonNodeFactory.instance.objectNode().put("InscriptionID", inscriptionID),
+                    JsonNodeFactory.instance.objectNode().put("inscriptionID", inscriptionID),
                     null);
             return;
         }

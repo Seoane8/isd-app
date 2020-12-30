@@ -29,7 +29,7 @@ public class JsonToRestInsciptionDtoConversor {
                     put("mail", inscription.getMail()).
                     put("creditCardNumber", inscription.getCredCardNumber()).
                     put("dorsal", inscription.getDorsal()).
-                    put("dosalCollected", inscription.isDorsalCollected());
+                    put("dorsalCollected", inscription.isDorsalCollected());
 
             return inscriptionNode;
         }

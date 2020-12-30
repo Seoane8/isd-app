@@ -3,14 +3,14 @@ package es.udc.ws.client.service.rest.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import es.udc.ws.client.service.exceptions.ClientAlreadyCollectedException;
-import es.udc.ws.client.service.exceptions.ClientIncorrectCreditCardException;
+import es.udc.ws.client.service.exceptions.*;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.json.ObjectMapperFactory;
 import es.udc.ws.util.json.exceptions.ParsingException;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 
 public class JsonToClientExceptionConversor {
     public static Exception fromNotFoundErrorCode(InputStream content) {
@@ -52,6 +52,12 @@ public class JsonToClientExceptionConversor {
                     return toInputValidationException(rootNode);
                 } else if (errorType.equals("IncorrectCreditCard")) {
                     return toIncorrectCreditCardException(rootNode);
+                } else if (errorType.equals("NoMoreInscriptionsAllowed")) {
+                    return toNoMoreInscriptionsAllowedException(rootNode);
+                } else if (errorType.equals("InscriptionDateExpired")) {
+                    return toInscriptionDateExpiredException(rootNode);
+                } else if (errorType.equals("AlreadyInscriptedException")) {
+                    return toAlreadyInscriptedException(rootNode);
                 } else {
                     throw new ParsingException("Unrecognized error type: " + errorType);
                 }
@@ -61,6 +67,23 @@ public class JsonToClientExceptionConversor {
         } catch (Exception e) {
             throw new ParsingException(e);
         }
+    }
+
+    private static ClientNoMoreInscriptionsAllowedException toNoMoreInscriptionsAllowedException(JsonNode rootNode){
+        Long raceId = rootNode.get("raceId").longValue();
+        return new ClientNoMoreInscriptionsAllowedException(raceId);
+    }
+
+    private static ClientInscriptionDateExpiredException toInscriptionDateExpiredException(JsonNode rootNode){
+        Long raceId = rootNode.get("raceId").longValue();
+        LocalDateTime date = LocalDateTime.parse(rootNode.get("date").textValue());
+        return new ClientInscriptionDateExpiredException(raceId,date);
+    }
+
+    private static ClientAlreadyInscriptedException toAlreadyInscriptedException(JsonNode rootNode){
+        Long raceId = rootNode.get("raceId").longValue();
+        String mail = rootNode.get("mail").textValue();
+        return new ClientAlreadyInscriptedException(raceId,mail);
     }
 
     private static Exception toIncorrectCreditCardException(JsonNode rootNode) {

@@ -68,8 +68,11 @@ public class RacesServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
         if (path == null || path.length() == 0) {
-           if (req.getParameter("city")==null || req.getParameter("date")==null) {  ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                   JsonToExceptionConversor.toInputValidationException(new InputValidationException("Invalid Request : parameters city and date can`t be null")), null);
+           if (req.getParameter("city")==null || req.getParameter("date")==null) {
+               ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                       JsonToExceptionConversor.toInputValidationException(
+                               new InputValidationException("Invalid Request : parameters city and date can`t be null")),
+                       null);
            return;
            }
             String city = req.getParameter("city");
@@ -81,7 +84,9 @@ public class RacesServlet extends HttpServlet {
                 try {
                     races = RaceServiceFactory.getService().findRaces(date, city);
                 } catch (InputValidationException e) {
-                    e.printStackTrace();
+                    ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                            JsonToExceptionConversor.toInputValidationException(e), null);
+                    return;
                 }
 
                 List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);

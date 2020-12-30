@@ -2,14 +2,18 @@ package es.udc.ws.client.ui;
 
 import es.udc.ws.client.service.ClientRaceService;
 import es.udc.ws.client.service.ClientRaceServiceFactory;
+import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
+import es.udc.ws.client.service.exceptions.ClientAlreadyInscriptedException;
+import es.udc.ws.client.service.exceptions.ClientInscriptionDateExpiredException;
+import es.udc.ws.client.service.exceptions.ClientNoMoreInscriptionsAllowedException;
+import es.udc.ws.client.service.rest.RestClientRaceService;
 import es.udc.ws.util.exceptions.InputValidationException;
+import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RaceInscriptionClient {
 
@@ -20,10 +24,10 @@ public class RaceInscriptionClient {
             }
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
-            if("-addRace".equalsIgnoreCase(args[0])) {
-              validateArgs(args, 7, new int[] { 1, 3, 6}, new int[] {4});
+            if("-a".equalsIgnoreCase(args[0])) {
+              validateArgs(args, 7, new int[] { 1, 3, 6});
 
-                // [add] RaceInscriptionClient -addRace <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
+                // [add] RaceInscriptionClient -a <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
 
                 try {
                     ClientRaceDto client = new ClientRaceDto(null,
@@ -42,7 +46,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-findRace".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {1},new int[]{});
+                validateArgs(args, 2, new int[] {1});
 
                 // [findRace] RaceInscriptionClient -findRace <movieId>
 
@@ -59,10 +63,10 @@ public class RaceInscriptionClient {
                     System.err.println(ex.getMessage());
                 }
 
-            } else if("-findRaces".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {}, new int[] {});
+            } else if("-f".equalsIgnoreCase(args[0])) {
+                validateArgs(args, 3, new int[] {});
 
-                // [findRaces] RaceInscriptionClient -findRaces <date> <city>
+                // [findRaces] RaceInscriptionClient -f <date> <city>
 
                 try {
                     List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
@@ -81,28 +85,25 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 }
 
-            /*} else if("-b".equalsIgnoreCase(args[0])) {
+            } else if("-addInscription".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 4, new int[] {1});
 
-                // [buy] MovieServiceClient -b <movieId> <userId> <creditCardNumber>
+                // [addInscription RaceServiceClient -addInscription <raceId> <mail> <creditCard>
 
-                Long saleId;
+                Long inscriptionId;
                 try {
-                    saleId = clientMovieService.buyMovie(Long.parseLong(args[1]),
-                            args[2], args[3]);
+                    inscriptionId = clientRaceService.addInscription(Long.parseLong(args[1]),args[2],args[3]);
 
-                    System.out.println("Movie " + args[1] +
-                            " purchased sucessfully with sale number " +
-                            saleId);
+                    System.out.println("Succesfully inscripted to race " + clientRaceService.findRace(Long.parseLong(args[1])).getDescription() +
+                            " with inscription ID " +
+                            inscriptionId);
 
-                } catch (NumberFormatException | InstanceNotFoundException |
-                        InputValidationException ex) {
-                    ex.printStackTrace(System.err);
-                } catch (Exception ex) {
+                } catch (InputValidationException | InstanceNotFoundException | ClientNoMoreInscriptionsAllowedException |
+                        ClientInscriptionDateExpiredException | ClientAlreadyInscriptedException ex) {
                     ex.printStackTrace(System.err);
                 }
 
-            } else if("-g".equalsIgnoreCase(args[0])) {
+            /*} else if("-g".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 2, new int[] {1});
 
                 // [get] MovieServiceClient -g <saleId>
@@ -117,10 +118,35 @@ public class RaceInscriptionClient {
                     ex.printStackTrace(System.err);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
-                } */
+                }*/
+
+            } else if("-findInscriptions".equalsIgnoreCase(args[0])) {
+                validateArgs(args, 2, new int[] {});
+
+                // [findInscriptions] RaceInscriptionClient -findInscriptions <mail>
+                
+                try {
+                    List<ClientInscriptionDto> inscriptions = clientRaceService.findInscriptions(args[1]);
+                    System.out.println("Found " + inscriptions.size() + " inscriptions for mail " + args[1]);
+                    for (int i = 0; i < inscriptions.size(); i++) {
+                        ClientInscriptionDto inscriptionDto = inscriptions.get(i);
+                        ClientRaceDto race = clientRaceService.findRace(inscriptionDto.getRaceID());
+                        System.out.println("InscriptionId: " + inscriptionDto.getInscriptionId() +
+                                ", RaceId: " + race.getRaceId() +
+                                ", Description: " + race.getDescription() +
+                                ", Dorsal: " + inscriptionDto.getDorsal() +
+                                ", participants: " + race.getParticipants() +
+                                ", Description: " + race.getDescription() +
+                                ", Location: " + race.getRaceLocation() +
+                                ", Date: " + race.getRaceDate().toString() +
+                                ", Price: " + race.getInscriptionPrice());
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace(System.err);
+                }
 
             } else if("-collectDorsal".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {2}, new int[] {});
+                validateArgs(args, 3, new int[] {2});
 
                 // [collectDorsal] RaceInscriptionClient -collectDorsal <creditCard> <inscriptionId>
 
@@ -137,30 +163,19 @@ public class RaceInscriptionClient {
         }
 
         public static void validateArgs(String[] args, int expectedArgs,
-                                        int[] numericArguments, int[] datesArguments) {
-            if (expectedArgs != args.length) {
+                                        int[] numericArguments) {
+            if(expectedArgs != args.length) {
                 printUsageAndExit();
             }
-            for (int i = 0; i < numericArguments.length; i++) {
+            for(int i = 0 ; i< numericArguments.length ; i++) {
                 int position = numericArguments[i];
                 try {
                     Double.parseDouble(args[position]);
-                } catch (NumberFormatException n) {
+                } catch(NumberFormatException n) {
                     printUsageAndExit();
-                }
-                for (i = 0; i < datesArguments.length; i++) {
-                    position = datesArguments[i];
-                    try {
-                        LocalDateTime.parse(args[position]);
-                    } catch (DateTimeException d) {
-                        printUsageAndExit();
-
-                    }
                 }
             }
         }
-
-
 
         public static void printUsageAndExit() {
             printUsage();
@@ -169,11 +184,11 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add]              -addRace <maxParticipants> <description> <price> <date> <city> <participants>\n" +
+                    "    [add]              -a <maxParticipants> <description> <price> <date> <city> <participants>\n" +
                     "    [findRace]         -findRace <raceId>\n" +
-                    "    [findRaces]        -findRaces <date> <city>\n" +
-                    "    [addInscription]   ...\n" +
-                    "    [findInscriptions] ...\n" +
+                    "    [findRaces]        -f <date> <city>\n" +
+                    "    [addInscription]   -addInscription <raceId> <mail> <creditCard>\n" +
+                    "    [findInscriptions] -findInscriptions <mail>\n" +
                     "    [collectDorsal]    -collectDorsal <creditCard> <inscriptionId>\n");
         }
 }
