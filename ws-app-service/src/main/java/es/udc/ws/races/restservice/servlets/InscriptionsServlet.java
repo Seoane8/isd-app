@@ -90,7 +90,7 @@ public class InscriptionsServlet extends HttpServlet {
                 return;
             }
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_CREATED,
-                    JsonNodeFactory.instance.objectNode().put("InscriptionID", inscriptionID),
+                    JsonNodeFactory.instance.objectNode().put("inscriptionID", inscriptionID),
                     null);
             return;
         }
