@@ -68,8 +68,8 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
             queryString += " WHERE";
         }
         if (initDate != null) {
-            queryString += " raceDate <= (?) AND raceDate >" + LocalDate.now().toString();
-            //queryString += " AND raceDate >= (?)";
+           // queryString += " raceDate <= (?) AND raceDate >" + LocalDate.now().toString();
+            queryString += " AND raceDate >= (?)";
         }
         if (city != null) {
             queryString += " AND city = (?)";
@@ -82,7 +82,7 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
                 Timestamp raceDate = initDate != null ? new Timestamp(
                         Timestamp.valueOf(initDate).getTime()) : null;
                 preparedStatement.setTimestamp(j++, raceDate);
-                /*Timestamp nowDate = new Timestamp(
+             /*   Timestamp nowDate = new Timestamp(
                         Timestamp.valueOf(LocalDateTime.now()).getTime());
                 preparedStatement.setTimestamp(j++, nowDate);*/
             }
