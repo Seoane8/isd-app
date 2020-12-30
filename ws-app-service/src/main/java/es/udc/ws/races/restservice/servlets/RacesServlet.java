@@ -68,7 +68,10 @@ public class RacesServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
         if (path == null || path.length() == 0) {
-           if (req.getParameter("city")==null || req.getParameter("date")==null) throw new NullPointerException("");
+           if (req.getParameter("city")==null || req.getParameter("date")==null) {  ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                   JsonToExceptionConversor.toInputValidationException(new InputValidationException("Invalid Request : parameters city and date can`t be null")), null);
+           return;
+           }
             String city = req.getParameter("city");
             String dateString;
             List<Race> races = new ArrayList<>();
