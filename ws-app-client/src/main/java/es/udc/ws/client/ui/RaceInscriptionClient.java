@@ -54,11 +54,7 @@ public class RaceInscriptionClient {
                 try {
                     ClientRaceDto race = clientRaceService.findRace(Long.parseLong(args[1]));
 
-                    System.out.println("Race with ID: " + race.getRaceId() + "\n" +
-                                        "Location: " + race.getRaceLocation() + "\n" +
-                                        "Description: " + race.getDescription() + "\n" +
-                                        "Places: " + race.getAvailablePlaces() + "\n" +
-                                        "Price: " + race.getInscriptionPrice());
+                    printRace(race);
 
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
@@ -75,11 +71,7 @@ public class RaceInscriptionClient {
                             " races(s) before " + args[1] + "and in " + args[2]);
                     for (int i = 0; i < races.size(); i++) {
                         ClientRaceDto raceDto = races.get(i);
-                        System.out.println("Id: " + raceDto.getRaceId() +
-                                ", Description: " + raceDto.getDescription() +
-                                ", participants: " + raceDto.getParticipants() +
-                                ", Location: " + raceDto.getRaceLocation() +
-                                ", Price: " + raceDto.getInscriptionPrice());
+                        printRace(raceDto);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
@@ -182,6 +174,14 @@ public class RaceInscriptionClient {
                     printUsageAndExit();
                 }
             }
+        }
+
+        public static void printRace(ClientRaceDto race){
+            System.out.println("Race with ID: " + race.getRaceId() + "\n" +
+                    "Location: " + race.getRaceLocation() + "\n" +
+                    "Description: " + race.getDescription() + "\n" +
+                    "Places: " + race.getAvailablePlaces() + "\n" +
+                    "Price: " + race.getInscriptionPrice() + "\n");
         }
 
 
