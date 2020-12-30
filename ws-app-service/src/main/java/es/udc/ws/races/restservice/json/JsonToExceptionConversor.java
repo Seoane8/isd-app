@@ -78,6 +78,7 @@ public class JsonToExceptionConversor {
 
     public static JsonNode toAlreadyInscriptedException(AlreadyInscriptedException e) {
         ObjectNode exceptionObject = JsonNodeFactory.instance.objectNode();
+        exceptionObject.put("errorType", "AlreadyInscripted");
         exceptionObject.put("raceId", (e.getRaceId() != null) ?
                 e.getRaceId().toString() : null);
         exceptionObject.put("mail", e.getMail());
