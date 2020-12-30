@@ -11,6 +11,7 @@ import es.udc.ws.client.service.rest.RestClientRaceService;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +26,7 @@ public class RaceInscriptionClient {
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
             if("-a".equalsIgnoreCase(args[0])) {
-              validateArgs(args, 7, new int[] { 1, 3, 6});
+              validateArgs(args, 7, new int[] { 1, 3, 6}, new int[] {});
 
                 // [add] RaceInscriptionClient -a <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
 
@@ -46,7 +47,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-findRace".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {1});
+                validateArgs(args, 2, new int[] {1}, new int[] {});
 
                 // [findRace] RaceInscriptionClient -findRace <movieId>
 
@@ -64,7 +65,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-f".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {});
+                validateArgs(args, 3, new int[] {}, new int[] {});
 
                 // [findRaces] RaceInscriptionClient -f <date> <city>
 
@@ -86,7 +87,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-addInscription".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 4, new int[] {1});
+                validateArgs(args, 4, new int[] {1}, new int[] {});
 
                 // [addInscription RaceServiceClient -addInscription <raceId> <mail> <creditCard>
 
@@ -121,7 +122,7 @@ public class RaceInscriptionClient {
                 }*/
 
             } else if("-findInscriptions".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {});
+                validateArgs(args, 2, new int[] {}, new int[] {});
 
                 // [findInscriptions] RaceInscriptionClient -findInscriptions <mail>
                 
@@ -146,7 +147,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-collectDorsal".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {2});
+                validateArgs(args, 3, new int[] {2}, new int[] {});
 
                 // [collectDorsal] RaceInscriptionClient -collectDorsal <creditCard> <inscriptionId>
 
@@ -163,7 +164,7 @@ public class RaceInscriptionClient {
         }
 
         public static void validateArgs(String[] args, int expectedArgs,
-                                        int[] numericArguments) {
+                                        int[] numericArguments,int[] datesArguments) {
             if(expectedArgs != args.length) {
                 printUsageAndExit();
             }
@@ -175,7 +176,17 @@ public class RaceInscriptionClient {
                     printUsageAndExit();
                 }
             }
+            for (int j = 0; j < datesArguments.length; j++) {
+               int position = datesArguments[j];
+                try {
+                    LocalDateTime.parse(args[position]);
+                } catch (DateTimeException d) {
+                    printUsageAndExit();
+                }
+            }
         }
+
+
 
         public static void printUsageAndExit() {
             printUsage();
