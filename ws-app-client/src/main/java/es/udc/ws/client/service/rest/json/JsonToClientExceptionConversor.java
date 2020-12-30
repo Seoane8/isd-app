@@ -56,7 +56,7 @@ public class JsonToClientExceptionConversor {
                     return toNoMoreInscriptionsAllowedException(rootNode);
                 } else if (errorType.equals("InscriptionDateExpired")) {
                     return toInscriptionDateExpiredException(rootNode);
-                } else if (errorType.equals("AlreadyInscriptedException")) {
+                } else if (errorType.equals("AlreadyInscripted")) {
                     return toAlreadyInscriptedException(rootNode);
                 } else {
                     throw new ParsingException("Unrecognized error type: " + errorType);
