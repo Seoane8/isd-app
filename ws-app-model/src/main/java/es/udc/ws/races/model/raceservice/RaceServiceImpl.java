@@ -85,6 +85,8 @@ public class RaceServiceImpl implements RaceService{
     public Long addInscription(Long raceId, String mail, String creditCard) throws InputValidationException, InstanceNotFoundException, NoMoreInscriptionsAllowedException, InscriptionDateExpiredException, AlreadyInscriptedException {
 
         PropertyValidator.validateCreditCard(creditCard);
+        validateMail(mail);
+
         try(Connection connection = dataSource.getConnection()){
             try{
                 /* Prepare connection */
@@ -134,6 +136,7 @@ public class RaceServiceImpl implements RaceService{
 
     @Override
     public List<Inscription> findInscriptions(String mail) throws InputValidationException {
+        validateMail(mail);
         try(Connection connection = dataSource.getConnection()){
             return inscriptionDao.findByMail(connection,mail);
         } catch (SQLException e){
@@ -199,4 +202,14 @@ public class RaceServiceImpl implements RaceService{
         }
     }
 
+    public void validateMail(String mail) throws InputValidationException{
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@" +
+                "((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+" +
+                "[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(mail);
+        if(!m.matches()){
+            throw new InputValidationException(mail + " is not a valid mail");
+        }
+    }
 }
