@@ -5,9 +5,11 @@ import es.udc.ws.client.service.ClientRaceServiceFactory;
 import es.udc.ws.client.service.dto.ClientRaceDto;
 import es.udc.ws.util.exceptions.InputValidationException;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class RaceInscriptionClient {
 
@@ -18,10 +20,10 @@ public class RaceInscriptionClient {
             }
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
-            if("-a".equalsIgnoreCase(args[0])) {
-              validateArgs(args, 7, new int[] { 1, 3, 6});
+            if("-addRace".equalsIgnoreCase(args[0])) {
+              validateArgs(args, 7, new int[] { 1, 3, 6}, new int[] {4});
 
-                // [add] RaceInscriptionClient -a <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
+                // [add] RaceInscriptionClient -addRace <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
 
                 try {
                     ClientRaceDto client = new ClientRaceDto(null,
@@ -40,7 +42,7 @@ public class RaceInscriptionClient {
                 }
 
             } else if("-findRace".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {1});
+                validateArgs(args, 2, new int[] {1},new int[]{});
 
                 // [findRace] RaceInscriptionClient -findRace <movieId>
 
@@ -57,10 +59,10 @@ public class RaceInscriptionClient {
                     System.err.println(ex.getMessage());
                 }
 
-            } else if("-f".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {});
+            } else if("-findRaces".equalsIgnoreCase(args[0])) {
+                validateArgs(args, 3, new int[] {}, new int[] {});
 
-                // [findRaces] RaceInscriptionClient -f <date> <city>
+                // [findRaces] RaceInscriptionClient -findRaces <date> <city>
 
                 try {
                     List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
@@ -118,7 +120,7 @@ public class RaceInscriptionClient {
                 } */
 
             } else if("-collectDorsal".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 3, new int[] {2});
+                validateArgs(args, 3, new int[] {2}, new int[] {});
 
                 // [collectDorsal] RaceInscriptionClient -collectDorsal <creditCard> <inscriptionId>
 
@@ -135,19 +137,30 @@ public class RaceInscriptionClient {
         }
 
         public static void validateArgs(String[] args, int expectedArgs,
-                                        int[] numericArguments) {
-            if(expectedArgs != args.length) {
+                                        int[] numericArguments, int[] datesArguments) {
+            if (expectedArgs != args.length) {
                 printUsageAndExit();
             }
-            for(int i = 0 ; i< numericArguments.length ; i++) {
+            for (int i = 0; i < numericArguments.length; i++) {
                 int position = numericArguments[i];
                 try {
                     Double.parseDouble(args[position]);
-                } catch(NumberFormatException n) {
+                } catch (NumberFormatException n) {
                     printUsageAndExit();
+                }
+                for (i = 0; i < datesArguments.length; i++) {
+                    position = datesArguments[i];
+                    try {
+                        LocalDateTime.parse(args[position]);
+                    } catch (DateTimeException d) {
+                        printUsageAndExit();
+
+                    }
                 }
             }
         }
+
+
 
         public static void printUsageAndExit() {
             printUsage();
@@ -156,9 +169,9 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add]              -a <maxParticipants> <description> <price> <date> <city> <participants>\n" +
+                    "    [add]              -addRace <maxParticipants> <description> <price> <date> <city> <participants>\n" +
                     "    [findRace]         -findRace <raceId>\n" +
-                    "    [findRaces]        -f <date> <city>\n" +
+                    "    [findRaces]        -findRaces <date> <city>\n" +
                     "    [addInscription]   ...\n" +
                     "    [findInscriptions] ...\n" +
                     "    [collectDorsal]    -collectDorsal <creditCard> <inscriptionId>\n");
