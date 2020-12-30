@@ -78,7 +78,6 @@ public class RaceInscriptionClient {
                         System.out.println("Id: " + raceDto.getRaceId() +
                                 ", Description: " + raceDto.getDescription() +
                                 ", participants: " + raceDto.getParticipants() +
-                                ", Description: " + raceDto.getDescription() +
                                 ", Location: " + raceDto.getRaceLocation() +
                                 ", Price: " + raceDto.getInscriptionPrice());
                     }
@@ -137,7 +136,6 @@ public class RaceInscriptionClient {
                                 ", Description: " + race.getDescription() +
                                 ", Dorsal: " + inscriptionDto.getDorsal() +
                                 ", participants: " + race.getParticipants() +
-                                ", Description: " + race.getDescription() +
                                 ", Location: " + race.getRaceLocation() +
                                 ", Date: " + race.getRaceDate().toString() +
                                 ", Price: " + race.getInscriptionPrice());
