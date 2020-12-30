@@ -68,8 +68,8 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
             queryString += " WHERE";
         }
         if (initDate != null) {
-           // queryString += " raceDate <= (?) AND raceDate >" + LocalDate.now().toString();
-            queryString += " AND raceDate >= (?)";
+           queryString += " raceDate <= (?) AND raceDate >" + LocalDate.now().toString();
+           // queryString += " AND raceDate >= (?)";
         }
         if (city != null) {
             queryString += " AND city = (?)";
