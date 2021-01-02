@@ -87,10 +87,13 @@ public class RaceInscriptionClient {
 
                     System.out.println("Succesfully inscripted to race " + clientRaceService.findRace(Long.parseLong(args[1])).getDescription() +
                             " with inscription ID " +
-                            inscriptionId);
+                            inscriptionId + "\n");
 
                 } catch (InputValidationException | InstanceNotFoundException | ClientNoMoreInscriptionsAllowedException |
                         ClientInscriptionDateExpiredException | ClientAlreadyInscriptedException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
 
@@ -118,20 +121,23 @@ public class RaceInscriptionClient {
                 
                 try {
                     List<ClientInscriptionDto> inscriptions = clientRaceService.findInscriptions(args[1]);
-                    System.out.println("Found " + inscriptions.size() + " inscriptions for mail " + args[1]);
+                    System.out.println("Found " + inscriptions.size() + " inscriptions for mail " + args[1] + "\n");
                     for (int i = 0; i < inscriptions.size(); i++) {
                         ClientInscriptionDto inscriptionDto = inscriptions.get(i);
                         ClientRaceDto race = clientRaceService.findRace(inscriptionDto.getRaceID());
-                        System.out.println("InscriptionId: " + inscriptionDto.getInscriptionId() +
-                                ", RaceId: " + race.getRaceId() +
-                                ", Description: " + race.getDescription() +
-                                ", Dorsal: " + inscriptionDto.getDorsal() +
-                                ", participants: " + race.getParticipants() +
-                                ", Location: " + race.getRaceLocation() +
-                                ", Date: " + race.getRaceDate().toString() +
-                                ", Price: " + race.getInscriptionPrice());
+                        System.out.println("InscriptionId: " + inscriptionDto.getInscriptionId() + "\n" +
+                                "- RaceId: " + race.getRaceId() + "\n" +
+                                "- Description: " + race.getDescription() + "\n" +
+                                "- Dorsal: " + inscriptionDto.getDorsal() + "\n" +
+                                "- participants: " + race.getParticipants() + "\n" +
+                                "- Location: " + race.getRaceLocation() + "\n" +
+                                "- Date: " + race.getRaceDate().toString() + "\n" +
+                                "- Price: " + race.getInscriptionPrice() + "\n") ;
                     }
-                } catch (Exception ex) {
+                }catch(InputValidationException ex){
+                    System.out.println(ex.getMessage());
+                }
+                catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
 
