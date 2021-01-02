@@ -4,10 +4,7 @@ import es.udc.ws.client.service.ClientRaceService;
 import es.udc.ws.client.service.ClientRaceServiceFactory;
 import es.udc.ws.client.service.dto.ClientInscriptionDto;
 import es.udc.ws.client.service.dto.ClientRaceDto;
-import es.udc.ws.client.service.exceptions.ClientAlreadyInscriptedException;
-import es.udc.ws.client.service.exceptions.ClientInscriptionDateExpiredException;
-import es.udc.ws.client.service.exceptions.ClientNoMoreInscriptionsAllowedException;
-import es.udc.ws.client.service.rest.RestClientRaceService;
+import es.udc.ws.client.service.exceptions.*;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
@@ -56,8 +53,10 @@ public class RaceInscriptionClient {
 
                     printRace(race);
 
-                } catch (Exception ex) {
-                    System.err.println(ex.getMessage());
+                } catch (InstanceNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }catch (Exception e) {
+                    e.printStackTrace(System.err);
                 }
 
             } else if("-f".equalsIgnoreCase(args[0])) {
@@ -146,8 +145,11 @@ public class RaceInscriptionClient {
 
                     System.out.println("The dorsal is: " + dorsal);
 
-                } catch (Exception ex) {
-                    System.err.println(ex.getMessage());
+                } catch (InputValidationException | InstanceNotFoundException |
+                        ClientAlreadyCollectedException | ClientIncorrectCreditCardException e) {
+                    System.err.println(e.getMessage());
+                }catch (Exception e) {
+                    e.printStackTrace(System.err);;
                 }
             } else printUsageAndExit();
 
