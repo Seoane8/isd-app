@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ClientRaceServiceFactory {
 
         private final static String CLASS_NAME_PARAMETER
-                = "ClientMovieServiceFactory.className";
+                = "ClientRaceServiceFactory.className";
         private static Class<ClientRaceService> serviceClass = null;
 
         private ClientRaceServiceFactory() {

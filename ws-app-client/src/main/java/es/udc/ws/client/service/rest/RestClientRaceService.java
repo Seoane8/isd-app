@@ -32,7 +32,7 @@ import java.util.List;
 
 public class RestClientRaceService implements ClientRaceService {
 
-    private final static String ENDPOINT_ADDRESS_PARAMETER = "RestClientMovieService.endpointAddress";
+    private final static String ENDPOINT_ADDRESS_PARAMETER = "RestClientRaceService.endpointAddress";
     private String endpointAddress;
 
 
