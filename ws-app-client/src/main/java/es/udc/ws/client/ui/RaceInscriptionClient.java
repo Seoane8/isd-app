@@ -25,10 +25,10 @@ public class RaceInscriptionClient {
             }
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
-            if("-a".equalsIgnoreCase(args[0])) {
+            if("-addRace".equalsIgnoreCase(args[0])) {
               validateArgs(args, 7, new int[] { 1, 3, 6}, new int[] {});
 
-                // [add] RaceInscriptionClient -a <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
+                // [add] RaceInscriptionClient -addRace <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
 
                 try {
                     ClientRaceDto client = new ClientRaceDto(null,
@@ -60,10 +60,10 @@ public class RaceInscriptionClient {
                     System.err.println(ex.getMessage());
                 }
 
-            } else if("-f".equalsIgnoreCase(args[0])) {
+            } else if("-findRaces".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 3, new int[] {}, new int[] {});
 
-                // [findRaces] RaceInscriptionClient -f <date> <city>
+                // [findRaces] RaceInscriptionClient -findRaces <date> <city>
 
                 try {
                     List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
@@ -193,9 +193,9 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add]              -a <maxParticipants> <description> <price> <date> <city> <participants>\n" +
+                    "    [add]              -addRace <maxParticipants> <description> <price> <date> <city> <participants>\n" +
                     "    [findRace]         -findRace <raceId>\n" +
-                    "    [findRaces]        -f <date> <city>\n" +
+                    "    [findRaces]        -findRaces <date> <city>\n" +
                     "    [addInscription]   -addInscription <raceId> <mail> <creditCard>\n" +
                     "    [findInscriptions] -findInscriptions <mail>\n" +
                     "    [collectDorsal]    -collectDorsal <creditCard> <inscriptionId>\n");
