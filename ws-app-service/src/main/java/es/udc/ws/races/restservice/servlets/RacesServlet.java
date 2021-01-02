@@ -68,6 +68,12 @@ public class RacesServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
         if (path == null || path.length() == 0) {
+            if (req.getParameter("city")==""){
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                                new InputValidationException("Invalid Request : parameter city can't be empty")),
+                        null);
+            }
            if (req.getParameter("city")==null || req.getParameter("date")==null) {
                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                        JsonToExceptionConversor.toInputValidationException(
