@@ -48,18 +48,19 @@ public class JsonToClientExceptionConversor {
                 throw new ParsingException("Unrecognized JSON (object expected)");
             } else {
                 String errorType = rootNode.get("errorType").textValue();
-                if (errorType.equals("InputValidation")) {
-                    return toInputValidationException(rootNode);
-                } else if (errorType.equals("IncorrectCreditCard")) {
-                    return toIncorrectCreditCardException(rootNode);
-                } else if (errorType.equals("NoMoreInscriptionsAllowed")) {
-                    return toNoMoreInscriptionsAllowedException(rootNode);
-                } else if (errorType.equals("InscriptionDateExpired")) {
-                    return toInscriptionDateExpiredException(rootNode);
-                } else if (errorType.equals("AlreadyInscripted")) {
-                    return toAlreadyInscriptedException(rootNode);
-                } else {
-                    throw new ParsingException("Unrecognized error type: " + errorType);
+                switch (errorType) {
+                    case "InputValidation":
+                        return toInputValidationException(rootNode);
+                    case "IncorrectCreditCard":
+                        return toIncorrectCreditCardException(rootNode);
+                    case "NoMoreInscriptionsAllowed":
+                        return toNoMoreInscriptionsAllowedException(rootNode);
+                    case "InscriptionDateExpired":
+                        return toInscriptionDateExpiredException(rootNode);
+                    case "AlreadyInscripted":
+                        return toAlreadyInscriptedException(rootNode);
+                    default:
+                        throw new ParsingException("Unrecognized error type: " + errorType);
                 }
             }
         } catch (ParsingException e) {

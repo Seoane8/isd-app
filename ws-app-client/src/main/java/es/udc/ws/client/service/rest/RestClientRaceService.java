@@ -152,6 +152,8 @@ public class RestClientRaceService implements ClientRaceService {
             return JsonToClientRaceDtoConversor.toClientRaceDtos(response.getEntity()
                     .getContent());
 
+        } catch (InputValidationException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RacesServlet extends HttpServlet {
 
@@ -68,39 +68,37 @@ public class RacesServlet extends HttpServlet {
         String path = ServletUtils.normalizePath(req.getPathInfo());
 
         if (path == null || path.length() == 0) {
-           if (req.getParameter("city")==null || req.getParameter("date")==null) {
-               ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                       JsonToExceptionConversor.toInputValidationException(
-                               new InputValidationException("Invalid Request : parameters city and date can`t be null")),
-                       null);
-           return;
-           }
+            if (req.getParameter("city")==null || req.getParameter("date")==null) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(
+                            new InputValidationException("Invalid Request : parameters city and date can`t be null")),
+                        null);
+                return;
+            }
             if (req.getParameter("city").trim().equals("")){
                 ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
                         JsonToExceptionConversor.toInputValidationException(
-                                new InputValidationException("Invalid Request : parameter city can't be empty")),
+                            new InputValidationException("Invalid Request : parameter city can't be empty")),
                         null);
                 return;
             }
             String city = req.getParameter("city");
-            String dateString;
-            List<Race> races = new ArrayList<>();
+            String dateString = req.getParameter("date");
+            List<Race> races;
 
-            if (!((dateString = req.getParameter("date")) == (null))) {
-                    LocalDate date = LocalDate.parse(dateString);
-                try {
-                    races = RaceServiceFactory.getService().findRaces(date, city);
-                } catch (InputValidationException e) {
-                    ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
-                            JsonToExceptionConversor.toInputValidationException(e), null);
-                    return;
-                }
-
-                List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);
-                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
-                        JsonToRestRaceDtoConversor.toArrayNode(raceDtos), null);
+            LocalDate date = LocalDate.parse(dateString);
+            try {
+                races = RaceServiceFactory.getService().findRaces(date, city);
+            } catch (InputValidationException e) {
+                ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_BAD_REQUEST,
+                        JsonToExceptionConversor.toInputValidationException(e), null);
                 return;
             }
+
+            List<RestRaceDto> raceDtos = RaceToRestRaceDtoConversor.toRaceDtos(races);
+            ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
+                    JsonToRestRaceDtoConversor.toArrayNode(raceDtos), null);
+            return;
         }
 
         String raceIdString = path.substring(1);
@@ -123,8 +121,7 @@ public class RacesServlet extends HttpServlet {
             race = RaceServiceFactory.getService().findRace(raceId);
         } catch (InstanceNotFoundException e) {
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_NOT_FOUND,
-                    JsonToExceptionConversor.toInstanceNotFoundException(e),
-                    null);
+                    JsonToExceptionConversor.toInstanceNotFoundException(e), null);
             return;
         }
 

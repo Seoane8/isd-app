@@ -1,21 +1,14 @@
 package es.udc.ws.races.restservice.json;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Locale;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import es.udc.ws.races.restservice.dto.RestInscriptionDto;
 
-public class JsonToRestInsciptionDtoConversor {
+import java.util.List;
 
-        public final static String CONVERSION_PATTERN = "yyyy-MM-dd HH:mm:ss";
-        public final static SimpleDateFormat sdf = new SimpleDateFormat(CONVERSION_PATTERN, Locale.ENGLISH);
+public class JsonToRestInsciptionDtoConversor {
 
         public static JsonNode toJsonObject(RestInscriptionDto inscription) {
 
@@ -36,8 +29,7 @@ public class JsonToRestInsciptionDtoConversor {
 
         public static ArrayNode toArrayJsonObject(List<RestInscriptionDto> inscriptions) {
             ArrayNode inscriptionsObject = JsonNodeFactory.instance.arrayNode();
-            for (int i = 0; i < inscriptions.size(); i++) {
-                RestInscriptionDto inscriptionDto = inscriptions.get(i);
+            for (RestInscriptionDto inscriptionDto : inscriptions) {
                 JsonNode inscriptionObject = toJsonObject(inscriptionDto);
                 inscriptionsObject.add(inscriptionObject);
             }

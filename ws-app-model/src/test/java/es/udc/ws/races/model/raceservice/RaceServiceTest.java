@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -144,7 +143,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testAddInvalidRace() throws InputValidationException, SQLException{
+    public void testAddInvalidRace() {
 
         // Check maxparticipants is >=1
 
@@ -436,10 +435,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testAddInscriptionInstanceNotFoundException() throws InputValidationException,
-            InstanceNotFoundException,
-            NoMoreInscriptionsAllowedException,
-            InscriptionDateExpiredException, AlreadyInscriptedException {
+    public void testAddInscriptionInstanceNotFoundException() throws InputValidationException {
 
         Race race1;
         race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE, VALID_RACE_DATE, 2, VALID_CITY);
@@ -450,10 +446,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testAddInscriptionInputValidationException() throws InputValidationException,
-            InstanceNotFoundException,
-            NoMoreInscriptionsAllowedException,
-            InscriptionDateExpiredException, AlreadyInscriptedException {
+    public void testAddInscriptionInputValidationException() throws InputValidationException {
         Race race1 = null;
 
         try{
@@ -468,10 +461,7 @@ public class RaceServiceTest {
     }
 
     @Test
-    public void testAddInscriptionInscriptionDateExpiredException() throws InputValidationException,
-            InstanceNotFoundException,
-            NoMoreInscriptionsAllowedException,
-            InscriptionDateExpiredException, AlreadyInscriptedException {
+    public void testAddInscriptionInscriptionDateExpiredException() throws InputValidationException {
         Race race1 = null;
 
         try{

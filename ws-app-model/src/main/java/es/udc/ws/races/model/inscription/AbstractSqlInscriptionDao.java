@@ -1,6 +1,5 @@
 package es.udc.ws.races.model.inscription;
 
-import es.udc.ws.races.model.race.Race;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.sql.*;

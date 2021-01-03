@@ -1,7 +1,5 @@
 package es.udc.ws.races.restservice.dto;
 
-import java.time.LocalDateTime;
-
 public class RestInscriptionDto {
 
     private long inscriptionId;

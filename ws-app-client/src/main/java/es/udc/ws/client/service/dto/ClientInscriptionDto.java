@@ -1,7 +1,5 @@
 package es.udc.ws.client.service.dto;
 
-import java.time.LocalDateTime;
-
 public class ClientInscriptionDto {
 
     private long inscriptionId;

@@ -3,7 +3,6 @@ package es.udc.ws.races.model.race;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public abstract class AbstractSqlRaceDao implements SqlRaceDao {
 
             /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setLong(i++, raceId.longValue());
+            preparedStatement.setLong(i++, raceId);
 
             /* Execute query. */
             ResultSet resultSet = preparedStatement.executeQuery();

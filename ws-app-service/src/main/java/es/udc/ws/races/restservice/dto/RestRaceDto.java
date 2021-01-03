@@ -1,7 +1,5 @@
 package es.udc.ws.races.restservice.dto;
 
-import java.time.LocalDateTime;
-
 public class RestRaceDto {
 
     private Long raceId;
@@ -68,7 +66,7 @@ public class RestRaceDto {
         return raceDate;
     }
 
-    public void setRentDate(String rentDate) {
+    public void setRaceDate(String raceDate) {
         this.raceDate = raceDate;
     }
 
@@ -93,7 +91,7 @@ public class RestRaceDto {
         return "RaceDto [raceId=" + raceId + ", maxParticipants=" + maxParticipants
                 + ", description=" + description
                 + ", inscriptionPrice=" + inscriptionPrice + ", raceDate=" + raceDate
-                + ", raceLocation=" + raceLocation + ", participans=" + participants
+                + ", raceLocation=" + raceLocation + ", participants=" + participants
                 + "]";
     }
 

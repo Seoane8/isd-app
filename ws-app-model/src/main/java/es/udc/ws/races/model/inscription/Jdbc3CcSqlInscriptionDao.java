@@ -1,7 +1,6 @@
 package es.udc.ws.races.model.inscription;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 
 public class Jdbc3CcSqlInscriptionDao extends AbstractSqlInscriptionDao{
 

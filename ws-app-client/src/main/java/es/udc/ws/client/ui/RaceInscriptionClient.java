@@ -29,15 +29,15 @@ public class RaceInscriptionClient {
 
                 try {
                     ClientRaceDto client = new ClientRaceDto(null,
-                            Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),LocalDateTime.parse(args[4])
+                            Integer.parseInt(args[1]),args[2], Float.parseFloat(args[3]),LocalDateTime.parse(args[4])
                             , args[5], 0);
 
                     Long raceId = clientRaceService.addRace(client);
 
 
-                    System.out.println("Race " + raceId + " created sucessfully");
+                    System.out.println("Race " + raceId + " created successfully");
 
-                } catch (NumberFormatException | InputValidationException ex) {
+                } catch (InputValidationException ex) {
                     System.out.println(ex.getMessage());
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
@@ -68,10 +68,11 @@ public class RaceInscriptionClient {
                     List<ClientRaceDto> races = clientRaceService.findRaces(LocalDate.parse(args[1]),args[2]);
                     System.out.println("Found " + races.size() +
                             " races(s) before " + args[1] + "and in " + args[2]);
-                    for (int i = 0; i < races.size(); i++) {
-                        ClientRaceDto raceDto = races.get(i);
+                    for (ClientRaceDto raceDto : races) {
                         printRace(raceDto);
                     }
+                } catch (InputValidationException ex) {
+                    System.out.println(ex.getMessage());
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
@@ -85,7 +86,7 @@ public class RaceInscriptionClient {
                 try {
                     inscriptionId = clientRaceService.addInscription(Long.parseLong(args[1]),args[2],args[3]);
 
-                    System.out.println("Succesfully inscripted to race " + clientRaceService.findRace(Long.parseLong(args[1])).getDescription() +
+                    System.out.println("Successfully inscribed to race " + clientRaceService.findRace(Long.parseLong(args[1])).getDescription() +
                             " with inscription ID " +
                             inscriptionId + "\n");
 
@@ -122,8 +123,7 @@ public class RaceInscriptionClient {
                 try {
                     List<ClientInscriptionDto> inscriptions = clientRaceService.findInscriptions(args[1]);
                     System.out.println("Found " + inscriptions.size() + " inscriptions for mail " + args[1] + "\n");
-                    for (int i = 0; i < inscriptions.size(); i++) {
-                        ClientInscriptionDto inscriptionDto = inscriptions.get(i);
+                    for (ClientInscriptionDto inscriptionDto : inscriptions) {
                         ClientRaceDto race = clientRaceService.findRace(inscriptionDto.getRaceID());
                         System.out.println("InscriptionId: " + inscriptionDto.getInscriptionId() + "\n" +
                                 "- RaceId: " + race.getRaceId() + "\n" +
@@ -132,7 +132,7 @@ public class RaceInscriptionClient {
                                 "- participants: " + race.getParticipants() + "\n" +
                                 "- Location: " + race.getRaceLocation() + "\n" +
                                 "- Date: " + race.getRaceDate().toString() + "\n" +
-                                "- Price: " + race.getInscriptionPrice() + "\n") ;
+                                "- Price: " + race.getInscriptionPrice() + "\n");
                     }
                 }catch(InputValidationException ex){
                     System.out.println(ex.getMessage());
@@ -155,7 +155,7 @@ public class RaceInscriptionClient {
                         ClientAlreadyCollectedException | ClientIncorrectCreditCardException e) {
                     System.err.println(e.getMessage());
                 }catch (Exception e) {
-                    e.printStackTrace(System.err);;
+                    e.printStackTrace(System.err);
                 }
             } else printUsageAndExit();
 
@@ -166,16 +166,14 @@ public class RaceInscriptionClient {
             if(expectedArgs != args.length) {
                 printUsageAndExit();
             }
-            for(int i = 0 ; i< numericArguments.length ; i++) {
-                int position = numericArguments[i];
+            for (int position : numericArguments) {
                 try {
                     Double.parseDouble(args[position]);
-                } catch(NumberFormatException n) {
+                } catch (NumberFormatException n) {
                     printUsageAndExit();
                 }
             }
-            for (int j = 0; j < datesArguments.length; j++) {
-               int position = datesArguments[j];
+            for (int position : datesArguments) {
                 try {
                     LocalDateTime.parse(args[position]);
                 } catch (DateTimeException d) {
