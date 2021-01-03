@@ -1,0 +1,85 @@
+1.- AÑADIR CARRERA
+
+-addRace <maxParticipants> <description> <price> <date> <city> <participants>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 2 '10Km. Campus Elviña' 10 '2021-08-15T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '5Km. Plaza Obradoiro' 5 '2021-08-25T11:00' 'Santiago' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 200 '7Km. Playa Riazor' 7 '2021-10-15T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 300 '20Km. Obelisco' 20 '2021-10-25T11:00' 'A Coruña' 0"
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2020-08-14T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' -2 '2021-08-14T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 0 '10Km. Torre Hércules' 10 '2021-08-14T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2021-08-14T11:00' ' ' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 ' ' 10 '2021-08-14T11:00' 'A Coruña' 0"
+
+
+2.- CARRERA FINALIZADA
+
+UPDATE Race SET raceDate='2020-11-25 10:00' WHERE raceId=4;
+
+
+3.- BUSCAR CARRERAS
+
+-findRaces <date> <city>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRaces '2021-12-15' 'A Coruña'"
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRaces '2021-08-31' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRaces '2021-07-31' 'Santiago'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRaces '2020-06-24' 'Santiago'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRaces '2021-08-31' ' '"
+
+***La última consulta aún falla***
+
+
+4.- INSCRIBIRSE EN UNA CARRERA
+
+-addInscription <raceId> <mail> <creditCard>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 1 'user1@udc.es' '0123456789111111'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 1 'user2#udc.es' '0123456789222222'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 2 'user2#udc.es' '0123456789222222'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 2 'user1@udc.es' '0123456789111111'"
+
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 1 'user3@udc.es' '0123456789333333'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 4 'user3@udc.es' '0123456789333333'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 2 'user1@udc.es' '0123456789111111'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 2 'user4' '0123456789444444'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 2 'user4@udc.es' '0123456789'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addInscription 9 'user4@udc.es' '0123456789444444'"
+
+
+5.- BUSCAR INSCRIPCIONES
+
+-findInscriptions <mail>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findInscriptions 'user1@udc.es'"
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findInscriptions 'user6@udc.es'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findInscriptions 'user1'"
+
+
+6.- ENTREGAR DORSAL
+
+-collectDorsal <creditCard> <inscriptionId>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-collectDorsal '0123456789222222' 1"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-collectDorsal '0123456789111111' 1"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-collectDorsal '0123456789111111' 1"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-collectDorsal '0123456789' 1"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-collectDorsal '0123456789111111' 9"
+
+
+
+7.- BUSCAR CARRERA POR IDENTIFICADOR
+
+-findRace <raceId>
+
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRace 2"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-findRace 9"
+
+
+
+

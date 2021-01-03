@@ -203,7 +203,10 @@ public class RestClientRaceService implements ClientRaceService {
 
             return JsonToClientInscriptionDtoConversor.toClientInscriptionDtos(
                     response.getEntity().getContent());
-        } catch (Exception e){
+        } catch (InputValidationException e){
+            throw new InputValidationException(e.getMessage());
+        }
+        catch (Exception e){
             throw new RuntimeException(e);
         }
     }
