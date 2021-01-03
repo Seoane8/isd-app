@@ -23,14 +23,14 @@ public class RaceInscriptionClient {
             ClientRaceService clientRaceService =
                     ClientRaceServiceFactory.getService();
             if("-addRace".equalsIgnoreCase(args[0])) {
-              validateArgs(args, 7, new int[] { 1, 3, 6}, new int[] {});
+              validateArgs(args, 6, new int[] { 1, 3}, new int[] {});
 
-                // [add] RaceInscriptionClient -addRace <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation> <participants>
+                // [add] RaceInscriptionClient -addRace <maxParticipants> <description> <inscriptionPrice> <raceDate> <raceLocation>
 
                 try {
                     ClientRaceDto client = new ClientRaceDto(null,
                             Integer.valueOf(args[1]),args[2], Float.valueOf(args[3]),LocalDateTime.parse(args[4])
-                            , args[5], Integer.valueOf(args[6]));
+                            , args[5], 0);
 
                     Long raceId = clientRaceService.addRace(client);
 
@@ -38,7 +38,7 @@ public class RaceInscriptionClient {
                     System.out.println("Race " + raceId + " created sucessfully");
 
                 } catch (NumberFormatException | InputValidationException ex) {
-                    ex.printStackTrace(System.err);
+                    System.out.println(ex.getMessage());
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
@@ -201,7 +201,7 @@ public class RaceInscriptionClient {
 
         public static void printUsage() {
             System.err.println("Usage:\n" +
-                    "    [add]              -addRace <maxParticipants> <description> <price> <date> <city> <participants>\n" +
+                    "    [add]              -addRace <maxParticipants> <description> <price> <date> <city> \n" +
                     "    [findRace]         -findRace <raceId>\n" +
                     "    [findRaces]        -findRaces <date> <city>\n" +
                     "    [addInscription]   -addInscription <raceId> <mail> <creditCard>\n" +
