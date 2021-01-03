@@ -258,26 +258,25 @@ public class RaceServiceTest {
         Race race1 = null;
         Race race2 = null;
         Race race3 = null;
-        Race race4 = null;
         try {
 
 
 
             race1 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-08-15T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
+                    VALID_RACE_DATE.plusDays(90).withNano(0), VALID_PARTICIPANTS, "A Coruña");
             race2 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-08-30T11:30:00"), VALID_PARTICIPANTS, "Santiago");
+                    VALID_RACE_DATE.plusDays(120).withNano(0), VALID_PARTICIPANTS, "Santiago");
             race3 = raceService.addRace(VALID_DESCRIPTION, VALID_PRICE,
-                    LocalDateTime.parse("2021-09-08T11:30:00"), VALID_PARTICIPANTS, "A Coruña");
+                    VALID_RACE_DATE.plusDays(180).withNano(0), VALID_PARTICIPANTS, "A Coruña");
 
 
 
-            List<Race> races1 = raceService.findRaces(LocalDate.parse("2021-08-14"), "A Coruña");
-            List<Race> races2 = raceService.findRaces(LocalDate.parse("2021-09-01"), "Santiago");
-            List<Race> races3 = raceService.findRaces(LocalDate.parse("2021-09-01"), "A Coruña");
-            List<Race> races4 = raceService.findRaces(LocalDate.parse("2021-09-20"), "A Coruña");
-            List<Race> races5 = raceService.findRaces(LocalDate.parse("2021-08-04"), null);
-            List<Race> races6 = raceService.findRaces(LocalDate.parse("2021-09-01"), null);
+            List<Race> races1 = raceService.findRaces(VALID_RACE_DATE.plusDays(80).withNano(0).toLocalDate(), "A Coruña");
+            List<Race> races2 = raceService.findRaces(VALID_RACE_DATE.plusDays(124).withNano(0).toLocalDate(), "Santiago");
+            List<Race> races3 = raceService.findRaces(VALID_RACE_DATE.plusDays(102).withNano(0).toLocalDate(), "A Coruña");
+            List<Race> races4 = raceService.findRaces(VALID_RACE_DATE.plusDays(200).withNano(0).toLocalDate(), "A Coruña");
+            List<Race> races5 = raceService.findRaces(VALID_RACE_DATE.plusDays(80).withNano(0).toLocalDate(), null);
+            List<Race> races6 = raceService.findRaces(VALID_RACE_DATE.plusDays(140).withNano(0).toLocalDate(), null);
 
 
             assertEquals(0, races1.size());
