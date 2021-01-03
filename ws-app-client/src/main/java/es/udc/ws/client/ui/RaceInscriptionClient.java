@@ -38,7 +38,7 @@ public class RaceInscriptionClient {
                     System.out.println("Race " + raceId + " created successfully");
 
                 } catch (InputValidationException ex) {
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
@@ -54,7 +54,7 @@ public class RaceInscriptionClient {
                     printRace(race);
 
                 } catch (InstanceNotFoundException e) {
-                    System.out.println(e.getMessage());
+                    System.err.println(e.getMessage());
                 }catch (Exception e) {
                     e.printStackTrace(System.err);
                 }
@@ -72,7 +72,7 @@ public class RaceInscriptionClient {
                         printRace(raceDto);
                     }
                 } catch (InputValidationException ex) {
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
@@ -92,30 +92,13 @@ public class RaceInscriptionClient {
 
                 } catch (InputValidationException | InstanceNotFoundException | ClientNoMoreInscriptionsAllowedException |
                         ClientInscriptionDateExpiredException | ClientAlreadyInscriptedException ex) {
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
                 catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
-
-            /*} else if("-g".equalsIgnoreCase(args[0])) {
-                validateArgs(args, 2, new int[] {1});
-
-                // [get] MovieServiceClient -g <saleId>
-
-                try {
-                    String movieURL =
-                            clientMovieService.getMovieUrl(Long.parseLong(args[1]));
-
-                    System.out.println("The URL for the sale " + args[1] +
-                            " is " + movieURL);
-                } catch (NumberFormatException | InstanceNotFoundException | ClientSaleExpirationException ex) {
-                    ex.printStackTrace(System.err);
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.err);
-                }*/
-
-            } else if("-findInscriptions".equalsIgnoreCase(args[0])) {
+            
+	    } else if("-findInscriptions".equalsIgnoreCase(args[0])) {
                 validateArgs(args, 2, new int[] {}, new int[] {});
 
                 // [findInscriptions] RaceInscriptionClient -findInscriptions <mail>
@@ -135,7 +118,7 @@ public class RaceInscriptionClient {
                                 "- Price: " + race.getInscriptionPrice() + "\n");
                     }
                 }catch(InputValidationException ex){
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
                 catch (Exception ex) {
                     ex.printStackTrace(System.err);
