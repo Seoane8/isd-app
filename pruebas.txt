@@ -2,16 +2,16 @@
 
 -addRace <maxParticipants> <description> <price> <date> <city> <participants>
 
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 2 '10Km. Campus Elviña' 10 '2021-08-15T11:00' 'A Coruña' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '5Km. Plaza Obradoiro' 5 '2021-08-25T11:00' 'Santiago' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 200 '7Km. Playa Riazor' 7 '2021-10-15T11:00' 'A Coruña' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 300 '20Km. Obelisco' 20 '2021-10-25T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 2 '10Km. Campus Elviña' 10 '2021-08-15T11:00' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '5Km. Plaza Obradoiro' 5 '2021-08-25T11:00' 'Santiago'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 200 '7Km. Playa Riazor' 7 '2021-10-15T11:00' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 300 '20Km. Obelisco' 20 '2021-10-25T11:00' 'A Coruña'"
 
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2020-08-14T11:00' 'A Coruña' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' -2 '2021-08-14T11:00' 'A Coruña' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 0 '10Km. Torre Hércules' 10 '2021-08-14T11:00' 'A Coruña' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2021-08-14T11:00' ' ' 0"
-mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 ' ' 10 '2021-08-14T11:00' 'A Coruña' 0"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2020-08-14T11:00' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' -2 '2021-08-14T11:00' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 0 '10Km. Torre Hércules' 10 '2021-08-14T11:00' 'A Coruña'"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 '10Km. Torre Hércules' 10 '2021-08-14T11:00' ' '"
+mvn exec:java -Dexec.mainClass="es.udc.ws.client.ui.RaceInscriptionClient" -Dexec.args="-addRace 100 ' ' 10 '2021-08-14T11:00' 'A Coruña'"
 
 
 2.- CARRERA FINALIZADA
