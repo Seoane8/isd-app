@@ -186,10 +186,10 @@ public class RaceInscriptionClient {
 
         public static void printRace(ClientRaceDto race){
             System.out.println("Race with ID: " + race.getRaceId() + "\n" +
-                    "Location: " + race.getRaceLocation() + "\n" +
-                    "Description: " + race.getDescription() + "\n" +
-                    "Places: " + race.getAvailablePlaces() + "\n" +
-                    "Price: " + race.getInscriptionPrice() + "\n");
+                    "- Location: " + race.getRaceLocation() + "\n" +
+                    "- Description: " + race.getDescription() + "\n" +
+                    "- Places: " + race.getAvailablePlaces() + "\n" +
+                    "- Price: " + race.getInscriptionPrice() + "\n");
         }
 
 
