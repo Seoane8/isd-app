@@ -40,16 +40,16 @@
     </servlet-mapping>
 
    <!-- Thrift service -->
-   <!-- Fill XXX and uncomment the following lines --> 
-   <!--
+   <!-- Fill XXX and uncomment the following lines -->
+
     <servlet>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <servlet-class>es.udc.ws.app.thriftservice.ThriftXXXServiceServlet</servlet-class>
+        <servlet-name>ThriftRacesServiceServlet</servlet-name>
+        <servlet-class>es.udc.ws.races.thriftservice.ThriftRaceServiceServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <url-pattern>/thrift/XXXservice</url-pattern>
+        <servlet-name>ThriftRacesServiceServlet</servlet-name>
+        <url-pattern>/thrift/raceservice</url-pattern>
     </servlet-mapping>
     -->
 

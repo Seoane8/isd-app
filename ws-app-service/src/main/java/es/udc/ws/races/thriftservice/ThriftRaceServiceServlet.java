@@ -6,9 +6,9 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.server.TServlet;
 
-public class ThiftRaceServiceServlet extends TServlet {
+public class ThriftRaceServiceServlet extends TServlet {
 
-    public ThiftRaceServiceServlet() {
+    public ThriftRaceServiceServlet() {
         super(createProcessor(), createProtocolFactory());
     }
 
