@@ -40,8 +40,8 @@ public class ThriftRaceServiceImpl implements ThriftRaceService.Iface{
 
     @Override
     public long addInscription(long raceId, String mail, String creditCard)
-            throws ThriftInputValidationException, ThriftInstanceNotFoundException,
-            ThriftAlreadyInscriptedException, ThriftInscriptionDateExpiredException{
+            throws ThriftInputValidationException, ThriftInstanceNotFoundException, ThriftAlreadyInscriptedException,
+            ThriftInscriptionDateExpiredException, ThriftNoMoreInscriptionsAllowedException{
         return 0;
     }
 

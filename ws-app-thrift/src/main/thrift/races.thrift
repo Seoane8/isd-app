@@ -48,6 +48,10 @@ exception ThriftInscriptionDateExpiredException {
     2: string raceDate
 }
 
+exception ThriftNoMoreInscriptionsAllowedException {
+    1: i64 raceId
+}
+
 service ThriftRaceService {
 
     i64 addRace(1: ThriftRaceDto raceDto)
@@ -61,7 +65,8 @@ service ThriftRaceService {
 
     i64 addInscription(1: i64 raceId, 2: string mail, 3: string creditCard)
         throws (1: ThriftInputValidationException e1, 2: ThriftInstanceNotFoundException e2,
-                3: ThriftAlreadyInscriptedException e3, 4: ThriftInscriptionDateExpiredException e4)
+                3: ThriftAlreadyInscriptedException e3, 4: ThriftInscriptionDateExpiredException e4
+                5: ThriftNoMoreInscriptionsAllowedException e5)
 
     list<ThriftInscriptionDto> findInscriptions(1: string mail) throws (1: ThriftInputValidationException e)
 
